@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html><body>
+<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+<script src="../../dist/altspace.js"></script>a
+<script src="https://sdk.altvr.com/libs/altspace.js/2.4.0/altspace.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.0/nunjucks.min.js"></script>
+<script src="https://rawgit.com/ngokevin/kframe/a1df8fc01514e509ba6d39c964254a1f1043b12b/dist/kframe.min.js"></script>
+
+<!-- set up the scene -->
+<a-scene altspace>
+ 
+    <!-- add a view camera (2d only) -->
+    <!--<a-text value="Hello, World!"></a-text>-->
+
+    <a-assets>
+
+  	</a-assets>
+
+	<a-entity position='4 8 -6' rotation='0 0 0' n-text='text: Craigs Maze! ;'></a-entity>
+	<a-entity position='20 3 -6' rotation='0 0 0' n-text='text: Note: This is not synchronised (yet) ;'></a-entity>
+
+	<!--<a-box depth="0.5" height="0.5" width="0.5" position='0 0 0' color='red'><a-box>
+	-->
+</a-scene>
+ 
+</body>
+
+<script>
+//this kinda works but messes stuff up 
+
+altspace.getEnclosure().then(function(enclosure){
+        enclosure.requestFullspace().then(function(){
+				
+		
+//--- synchronisation
+var utilities = altspace.utilities;
+var behaviors = altspace.utilities.behaviors;
+//sync doesnt work yet :(
+var sim = new utilities.Simulation();
+var inCodePen = utilities.codePen.inCodePen;
+var instanceRef;
+
+//---
+var size = 20;
+var scale = 3;
+var maze = newMaze(size,size);
+console.log(maze);
+
+var box2 = document.createElement('a-entity');
+box2.setAttribute('geometry', 'primitive: box; width: 2; height: 1; depth: 0.01;');
+box2.setAttribute('color','#00FF00');
+box2.setAttribute('position', '-0.5 ' + '0' +' -2.5');
+
+var box1Geo = new THREE.BoxGeometry(0.1, 1, scale); 
+var box2Geo = new THREE.BoxGeometry(scale, 1, 0.1); 
+
+var box3Geo = new THREE.BoxGeometry(0.1, 1, size*scale); 
+var box4Geo = new THREE.BoxGeometry(size*scale, 1, 0.1); 
+
+var bTex = new THREE.ImageUtils.loadTexture("assets/test.png");
+var bMat = new THREE.MeshBasicMaterial({ 
+    map:bTex, 
+    side:THREE.DoubleSide 
+}); 
+
+
+var box3 = new THREE.Mesh(box3Geo, bMat);
+var box4 = new THREE.Mesh(box4Geo, bMat);
+
+box3.position.set(scale*size,0,scale*size/2 -scale);
+box4.position.set(scale*size/2,0,-scale);
+
+sim.scene.add(box3);
+sim.scene.add(box4);
+
+
+for (var i = 0; i<size;i++){
+	for (var j = 0; j < size; j ++){
+	
+		maze[0][0][0] = 1;
+	
+		console.log(i+ ","+j+"| " + maze[i][j]);
+		//console.log(maze[i][j][3])
+		//scene.appendChild(box2);
+		var box1 = new THREE.Mesh(box1Geo, bMat);
+		var box2 = new THREE.Mesh(box2Geo, bMat);
+		
+		box1.collider = true;
+		box2.collider = true;
+		
+		//top boxes
+		if (maze[i][j][0] == 0 ){
+			box1.position.set(scale*i,0,scale*(j-0.5));
+			sim.scene.add(box1);
+		}
+		if (maze[i][j][1] == 0 ){
+			box2.position.set(scale*(i+0.5),0,scale*j);
+			sim.scene.add(box2);
+		}
+		
+	}
+}
+
+
+//not my code... 
+function newMaze(x, y) {
+
+    // Establish variables and starting grid
+    var totalCells = x*y;
+	var cells = new Array();
+    var unvis = new Array();
+    for (var i = 0; i < y; i++) {
+        cells[i] = new Array();
+        unvis[i] = new Array();
+        for (var j = 0; j < x; j++) {
+            cells[i][j] = [0,0,0,0];
+            unvis[i][j] = true;
+        }
+    }
+    
+    // Set a random position to start from
+    var currentCell = [Math.floor(Math.random()*y), Math.floor(Math.random()*x)];
+    var path = [currentCell];
+    unvis[currentCell[0]][currentCell[1]] = false;
+    var visited = 1;
+    
+    // Loop through all available cell positions
+    while (visited < totalCells) {
+        // Determine neighboring cells
+        var pot = [[currentCell[0]-1, currentCell[1], 0, 2],
+                [currentCell[0], currentCell[1]+1, 1, 3],
+                [currentCell[0]+1, currentCell[1], 2, 0],
+                [currentCell[0], currentCell[1]-1, 3, 1]];
+        var neighbors = new Array();
+        
+        // Determine if each neighboring cell is in game grid, and whether it has already been checked
+        for (var l = 0; l < 4; l++) {
+            if (pot[l][0] > -1 && pot[l][0] < y && pot[l][1] > -1 && pot[l][1] < x && unvis[pot[l][0]][pot[l][1]]) { neighbors.push(pot[l]); }
+        }
+        
+        // If at least one active neighboring cell has been found
+        if (neighbors.length) {
+            // Choose one of the neighbors at random
+            next = neighbors[Math.floor(Math.random()*neighbors.length)];
+            
+            // Remove the wall between the current cell and the chosen neighboring cell
+            cells[currentCell[0]][currentCell[1]][next[2]] = 1;
+            cells[next[0]][next[1]][next[3]] = 1;
+            
+            // Mark the neighbor as visited, and set it as the current cell
+            unvis[next[0]][next[1]] = false;
+            visited++;
+            currentCell = [next[0], next[1]];
+            path.push(currentCell);
+        }
+        // Otherwise go back up a step and keep going
+        else {
+            currentCell = path.pop();
+        }
+    }
+    return cells;
+}
+
+
+		});
+   });
+</script>
+</html>
