@@ -82,6 +82,7 @@ AFRAME.registerComponent('base_collision',
 		
 		
 		if (self.data.box_id == 1 && started==false){
+		time = 0;
 		console.log("ticky");
 		setInterval(tick, 100);
 		started = true;
@@ -120,7 +121,15 @@ function tick(){
 
 	time+=0.1;
 	time = Math.round(time*10)/10;
+	
+	if (started){
 	document.querySelector('#time').setAttribute('n-text','text:' + time);
+	}
+	else 
+	{
+	document.querySelector('#time').setAttribute('n-text','text:' + finaltime);
+	}
+	
 	//readFirebase();
 	//console.log(time);
 	
@@ -163,6 +172,8 @@ function getUser1(){
 	<a-entity id='time' scale="4 4 4" position='86 3 100' rotation='0 180 0' n-text='text: timer;'></a-entity>
 
 	 <a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6">
+		<a-animation attribute="rotation" dur="300000" to="0 360 0" repeat="indefinite" easing="linear">
+		
 		</a-sky>
 		
 	<!--<a-box id="test" col='boxId:1;' n-mesh-collider="type:hologram" position='0 0 0' scale='10 10 10' opacity='0.5' color='red'></a-box>
@@ -315,12 +326,14 @@ var box3 = document.createElement('a-entity');
 		box3.setAttribute('color','#00FF00');
 		box3.setAttribute('n-mesh-collider','type:environment');
 		box3.setAttribute('position', scale*size + ' ' + height/2 + ' ' + (scale*size/2-scale));
+		box3.setAttribute('opacity','0.5');
 		
 var box4 = document.createElement('a-entity');
 		box4.setAttribute('geometry', 'primitive: box; width: '+ (size*scale) +'; height: '+height+'; depth: 0.1');
 		box4.setAttribute('color','#00FF00');
 		box4.setAttribute('n-mesh-collider','type:environment');
 		box4.setAttribute('position', scale*size/2 + ' '+height/2+' ' + -scale);
+		box4.setAttribute('opacity','0.5');
 		
 		scene.appendChild(box3);
 		scene.appendChild(box4);
@@ -342,13 +355,15 @@ for (var i = 0; i<size;i++){
 		box1.setAttribute('geometry', 'primitive: box; width: 0.1; height: '+height+'; depth: '+scale+';');
 		box1.setAttribute('color','#00FF00');
 		box1.setAttribute('n-mesh-collider','type:environment');
+		box1.setAttribute('opacity','0.5');
 		
 		var box2 = document.createElement('a-entity');
 		box2.setAttribute('geometry', 'primitive: box; width: ' +scale+ '; height: '+height+'; depth: 0.1;');
 		box2.setAttribute('color','#00FF00');
 		box2.setAttribute('n-mesh-collider','type:environment');
+		box2.setAttribute('opacity','0.5');
 		
-		box1.collider = true;
+		
 		//box2.collider = true;
 		
 		//top boxes
