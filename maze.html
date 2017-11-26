@@ -56,13 +56,14 @@ var scene = document.querySelector('a-scene');
 
 var fbGameRef = new Firebase("https://vrmaze-b0810.firebaseio.com");
 //---
-var size = 20;
+var size = 30;
 var scale = 3;
 var height = 4;
-var maze //= newMaze(size,size);
+var maze = newMaze1(size,size);
+var objects = [];
 //console.log(maze);
 
-var box1Geo = new THREE.BoxGeometry(1, 10, 1); 
+var box1Geo = new THREE.BoxGeometry(1, 1, 1); 
 
 var bTex = new THREE.ImageUtils.loadTexture("assets/test.png");
 var bMat = new THREE.MeshBasicMaterial({ 
@@ -71,13 +72,33 @@ var bMat = new THREE.MeshBasicMaterial({
 }); 
 
 
+var newMaze = new THREE.Mesh(box1Geo, bMat);
+
 var endbox = new THREE.Mesh(box1Geo, bMat);
 //var box4 = new THREE.Mesh(box4Geo, bMat);
 
+newMaze.position.set(-1, 0, -1);
 endbox.position.set((scale*size), 5, (scale*size)-scale);
 //box4.position.set(scale*size/2,0,-scale);
 
+sim.scene.add(newMaze);
 sim.scene.add(endbox);
+
+
+
+function wipeObjects(){
+
+	for (var i=0; i<objects.length; i++){
+		scene.remove(objects[i]);
+	}
+
+
+
+
+
+}
+
+
 
 function readFirebase(){
 
@@ -93,22 +114,32 @@ function writeFirebase(){
 
 	console.log("writing to firebase");
 	fbGameRef.update({maze:maze});
-
+	
+	readFirebase();
 }
 
 
+
+main();
 //writeFirebase();
-readFirebase();
+//readFirebase();
 
 
+//setInterval(tick, 1000);
+
+//readfirebase every second to see if updated maze...
+function tick(){
+
+	//readFirebase();
+	console.log("tick");
+}
 
 
 
 function main(){
 
 
-
-
+wipeObjects();
 
 
 
@@ -122,6 +153,7 @@ var floor = document.createElement('a-entity');
 		floor.setAttribute('position', (scale*size)/2 + ' 0 ' + (scale*size-2*scale)/2);
 
 	scene.appendChild(floor);
+	objects.push(floor);
 
 	var roof = document.createElement('a-box');
 		//roof.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+'; ');
@@ -131,6 +163,7 @@ var floor = document.createElement('a-entity');
 		roof.setAttribute('position', (scale*size)/2 + ' '+height+' ' + (scale*size-2*scale)/2);
 
 	scene.appendChild(roof);
+	objects.push(roof);
 	
 	var ramp = document.createElement('a-box');
 		//roof.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+'; ');
@@ -141,7 +174,7 @@ var floor = document.createElement('a-entity');
 		ramp.setAttribute('rotation', '0 0 45');
 
 	scene.appendChild(ramp);
-
+	objects.push(ramp);
 
 
 
@@ -162,6 +195,10 @@ var box4 = document.createElement('a-entity');
 		
 		scene.appendChild(box3);
 		scene.appendChild(box4);
+		
+		objects.push(box3);
+		objects.push(box4);
+		
 
 for (var i = 0; i<size;i++){
 	for (var j = 0; j < size; j ++){
@@ -193,12 +230,14 @@ for (var i = 0; i<size;i++){
 			box1.setAttribute('position', scale*i + ' ' +height/2+' ' + scale*(j-0.5));
 			//sim.scene.add(box1);
 			scene.appendChild(box1);
+			objects.push(box1);
 		}
 		if (maze[i][j][1] == 0 ){
 			//box2.position.set(scale*(i+0.5),0,scale*j);
 			box2.setAttribute('position', scale*(i+0.5) + ' '+height/2+' ' + scale*j);
 			//sim.scene.add(box2);
 			scene.appendChild(box2);
+			objects.push(box2);
 		}
 		
 	}
@@ -206,7 +245,7 @@ for (var i = 0; i<size;i++){
 }
 
 //not my code... 
-function newMaze(x, y) {
+function newMaze1(x, y) {
 
     // Establish variables and starting grid
     var totalCells = x*y;
@@ -263,6 +302,14 @@ function newMaze(x, y) {
     }
     return cells;
 }
+
+newMaze.addEventListener('cursordown', function(){
+	//console.log("123");
+	//console.log(newMaze1(size,size));
+	maze = newMaze1(size,size);
+	writeFirebase();
+	
+});
 
 
 		});
