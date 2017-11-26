@@ -6,6 +6,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.0/nunjucks.min.js"></script>
 <script src="https://rawgit.com/ngokevin/kframe/a1df8fc01514e509ba6d39c964254a1f1043b12b/dist/kframe.min.js"></script>
 
+
+<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCqHluXEqdILFNl22-DFOVsMBHNt2pZ5H4",
+    authDomain: "vrmaze-b0810.firebaseapp.com",
+    databaseURL: "https://vrmaze-b0810.firebaseio.com",
+    projectId: "vrmaze-b0810",
+    storageBucket: "vrmaze-b0810.appspot.com",
+    messagingSenderId: "82215601878"
+  };
+  firebase.initializeApp(config);
+</script>
+
 <!-- set up the scene -->
 <a-scene altspace>
  
@@ -19,8 +34,6 @@
 	<a-entity position='4 8 -6' rotation='0 0 0' n-text='text: Craigs Maze! ;'></a-entity>
 	<a-entity position='20 3 -6' rotation='0 0 0' n-text='text: Note: This is not synchronised (yet) ;'></a-entity>
 
-	<!--<a-box depth="0.5" height="0.5" width="0.5" position='0 0 0' color='red'><a-box>
-	-->
 </a-scene>
  
 </body>
@@ -39,23 +52,17 @@ var behaviors = altspace.utilities.behaviors;
 var sim = new utilities.Simulation();
 var inCodePen = utilities.codePen.inCodePen;
 var instanceRef;
+var scene = document.querySelector('a-scene');
 
+var fbGameRef = new Firebase("https://vrmaze-b0810.firebaseio.com");
 //---
 var size = 20;
 var scale = 3;
-var maze = newMaze(size,size);
-console.log(maze);
+var height = 4;
+var maze //= newMaze(size,size);
+//console.log(maze);
 
-var box2 = document.createElement('a-entity');
-box2.setAttribute('geometry', 'primitive: box; width: 2; height: 1; depth: 0.01;');
-box2.setAttribute('color','#00FF00');
-box2.setAttribute('position', '-0.5 ' + '0' +' -2.5');
-
-var box1Geo = new THREE.BoxGeometry(0.1, 1, scale); 
-var box2Geo = new THREE.BoxGeometry(scale, 1, 0.1); 
-
-var box3Geo = new THREE.BoxGeometry(0.1, 1, size*scale); 
-var box4Geo = new THREE.BoxGeometry(size*scale, 1, 0.1); 
+var box1Geo = new THREE.BoxGeometry(1, 10, 1); 
 
 var bTex = new THREE.ImageUtils.loadTexture("assets/test.png");
 var bMat = new THREE.MeshBasicMaterial({ 
@@ -64,15 +71,97 @@ var bMat = new THREE.MeshBasicMaterial({
 }); 
 
 
-var box3 = new THREE.Mesh(box3Geo, bMat);
-var box4 = new THREE.Mesh(box4Geo, bMat);
+var endbox = new THREE.Mesh(box1Geo, bMat);
+//var box4 = new THREE.Mesh(box4Geo, bMat);
 
-box3.position.set(scale*size,0,scale*size/2 -scale);
-box4.position.set(scale*size/2,0,-scale);
+endbox.position.set((scale*size), 5, (scale*size)-scale);
+//box4.position.set(scale*size/2,0,-scale);
 
-sim.scene.add(box3);
-sim.scene.add(box4);
+sim.scene.add(endbox);
 
+function readFirebase(){
+
+	console.log("reading firebase...");
+	fbGameRef.child("maze").on("value", function(snapshot){
+		maze = snapshot.val();
+		main();
+	});
+
+}
+
+function writeFirebase(){
+
+	console.log("writing to firebase");
+	fbGameRef.update({maze:maze});
+
+}
+
+
+//writeFirebase();
+readFirebase();
+
+
+
+
+
+function main(){
+
+
+
+
+
+
+
+
+console.log(maze);
+
+var floor = document.createElement('a-entity');
+		floor.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+';');
+		floor.setAttribute('color','#00FF00');
+		floor.setAttribute('n-mesh-collider','type:environment');
+		floor.setAttribute('position', (scale*size)/2 + ' 0 ' + (scale*size-2*scale)/2);
+
+	scene.appendChild(floor);
+
+	var roof = document.createElement('a-box');
+		//roof.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+'; ');
+		roof.setAttribute('scale', scale*size + ' 0.1 ' +scale*size);
+		roof.setAttribute('opacity','0.25');
+		roof.setAttribute('n-mesh-collider','type:environment');
+		roof.setAttribute('position', (scale*size)/2 + ' '+height+' ' + (scale*size-2*scale)/2);
+
+	scene.appendChild(roof);
+	
+	var ramp = document.createElement('a-box');
+		//roof.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+'; ');
+		ramp.setAttribute('scale', height + ' 0.1 2');
+		ramp.setAttribute('opacity','0.25');
+		ramp.setAttribute('n-mesh-collider','type:environment');
+		ramp.setAttribute('position', '0 '+height/2+' -4');
+		ramp.setAttribute('rotation', '0 0 45');
+
+	scene.appendChild(ramp);
+
+
+
+
+
+
+
+var box3 = document.createElement('a-entity');
+		box3.setAttribute('geometry', 'primitive: box; width: 0.1; height: '+height+'; depth: '+(scale*size)+';');
+		box3.setAttribute('color','#00FF00');
+		box3.setAttribute('n-mesh-collider','type:environment');
+		box3.setAttribute('position', scale*size + ' ' + height/2 + ' ' + (scale*size/2-scale));
+		
+var box4 = document.createElement('a-entity');
+		box4.setAttribute('geometry', 'primitive: box; width: '+ (size*scale) +'; height: '+height+'; depth: 0.1');
+		box4.setAttribute('color','#00FF00');
+		box4.setAttribute('n-mesh-collider','type:environment');
+		box4.setAttribute('position', scale*size/2 + ' '+height/2+' ' + -scale);
+		
+		scene.appendChild(box3);
+		scene.appendChild(box4);
 
 for (var i = 0; i<size;i++){
 	for (var j = 0; j < size; j ++){
@@ -82,25 +171,39 @@ for (var i = 0; i<size;i++){
 		console.log(i+ ","+j+"| " + maze[i][j]);
 		//console.log(maze[i][j][3])
 		//scene.appendChild(box2);
-		var box1 = new THREE.Mesh(box1Geo, bMat);
-		var box2 = new THREE.Mesh(box2Geo, bMat);
+		//var box1 = new THREE.Mesh(box1Geo, bMat);
+		//var box2 = new THREE.Mesh(box2Geo, bMat);
+		
+		var box1 = document.createElement('a-entity');
+		box1.setAttribute('geometry', 'primitive: box; width: 0.1; height: '+height+'; depth: '+scale+';');
+		box1.setAttribute('color','#00FF00');
+		box1.setAttribute('n-mesh-collider','type:environment');
+		
+		var box2 = document.createElement('a-entity');
+		box2.setAttribute('geometry', 'primitive: box; width: ' +scale+ '; height: '+height+'; depth: 0.1;');
+		box2.setAttribute('color','#00FF00');
+		box2.setAttribute('n-mesh-collider','type:environment');
 		
 		box1.collider = true;
-		box2.collider = true;
+		//box2.collider = true;
 		
 		//top boxes
 		if (maze[i][j][0] == 0 ){
-			box1.position.set(scale*i,0,scale*(j-0.5));
-			sim.scene.add(box1);
+			//box1.position.set(scale*i,0,scale*(j-0.5));
+			box1.setAttribute('position', scale*i + ' ' +height/2+' ' + scale*(j-0.5));
+			//sim.scene.add(box1);
+			scene.appendChild(box1);
 		}
 		if (maze[i][j][1] == 0 ){
-			box2.position.set(scale*(i+0.5),0,scale*j);
-			sim.scene.add(box2);
+			//box2.position.set(scale*(i+0.5),0,scale*j);
+			box2.setAttribute('position', scale*(i+0.5) + ' '+height/2+' ' + scale*j);
+			//sim.scene.add(box2);
+			scene.appendChild(box2);
 		}
 		
 	}
 }
-
+}
 
 //not my code... 
 function newMaze(x, y) {
