@@ -21,6 +21,134 @@
   firebase.initializeApp(config);
 </script>
 
+
+<script>
+var fbGameRef = new Firebase("https://vrmaze-b0810.firebaseio.com");
+var started = false;
+var time=0;
+var finaltime=0;
+var user;
+var times=[];
+//base collision aframe component code
+
+getUser1();
+
+AFRAME.registerComponent('base_collision',
+                         {
+  schema:  //does stuff
+  { 
+    jointCubeSize: {
+      type: 'float',
+      default: 0.275
+    },
+	box_id:
+	{
+		type: 'int'
+	}
+  },
+  init: function ()
+  {
+    var self = this;
+    var object = self.el.object3D;
+	
+    object.addBehavior(new altspace.utilities.behaviors.JointCollisionEvents
+                       ({
+      joints: [['Head', 'Center', 0]], jointCubeSize: self.data.jointCubeSize
+    }));
+	
+	//joints enter
+    object.addEventListener('jointcollisionenter', handleJoin);		
+    function handleJoin(event)
+    {
+	
+		console.log("box " + self.data.box_id);
+	    //console.log("start");
+		
+		if (self.data.box_id==2 && started==true){
+		
+			//upload time to database
+		
+			
+			finaltime = time;
+			times[0] = user;
+			times[1] = finaltime;
+			console.log("final time = " + finaltime);
+			writeFirebase();
+
+		
+			console.log("end");
+			started = false;
+		}	
+		
+		
+		if (self.data.box_id == 2 && started==false{
+		
+		setInterval(tick, 100);
+		started = true;
+		
+		}
+		
+		
+		
+		//readfirebase every second to see if updated maze...
+	
+		
+	
+		
+		
+    }// end function handle join
+	
+	//joint collision leave
+    object.addEventListener('jointcollisionleave', handleLeave);
+    function handleLeave(event)
+    {
+	
+    }//end function handle leave
+  }
+}); //end base collision
+
+function writeFirebase(){
+
+	console.log("writing to firebase");
+	fbGameRef.child("times").push({times:times});
+	
+	//readFirebase();
+}
+
+
+function tick(){
+
+	time+=0.1;
+	time = Math.round(time*10)/10;
+	document.querySelector('#time').setAttribute('n-text','text:' + time);
+	//readFirebase();
+	//console.log(time);
+	
+}
+
+function getUser1(){
+	
+	altspace.getUser().then(function(user1){
+		user = user1.displayName;
+		console.log(user);
+		//sets timeout to deal with latency issues - kinda works
+		//setTimeout(addToSession, 2000); 
+	});
+	
+}
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
 <!-- set up the scene -->
 <a-scene altspace>
  
@@ -32,8 +160,23 @@
   	</a-assets>
 
 	<a-entity position='4 8 -6' rotation='0 0 0' n-text='text: Craigs Maze! ;'></a-entity>
-	<a-entity position='20 3 -6' rotation='0 0 0' n-text='text: Note: This is not synchronised (yet) ;'></a-entity>
+	<a-entity id='time' scale="4 4 4" position='86 3 100' rotation='0 180 0' n-text='text: timer;'></a-entity>
 
+	 <a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6">
+		</a-sky>
+		
+	<!--<a-box id="test" col='boxId:1;' n-mesh-collider="type:hologram" position='0 0 0' scale='10 10 10' opacity='0.5' color='red'></a-box>
+	-->
+	
+	<!--
+	<a-box id="box" n-mesh-collider="type:hologram"; isTrigger=true;" col1="box_id:4;" color="red" position="0 0 0" scale="5 5 5" opacity="0.2">
+	</a-box>
+		
+		-->
+	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="0, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="88.5, 2, 87" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+		
+		
 </a-scene>
  
 </body>
@@ -82,7 +225,7 @@ endbox.position.set((scale*size), 5, (scale*size)-scale);
 //box4.position.set(scale*size/2,0,-scale);
 
 sim.scene.add(newMaze);
-sim.scene.add(endbox);
+//sim.scene.add(endbox);
 
 
 
@@ -91,10 +234,6 @@ function wipeObjects(){
 	for (var i=0; i<objects.length; i++){
 		scene.remove(objects[i]);
 	}
-
-
-
-
 
 }
 
@@ -115,7 +254,7 @@ function writeFirebase(){
 	console.log("writing to firebase");
 	fbGameRef.update({maze:maze});
 	
-	readFirebase();
+	//readFirebase();
 }
 
 
@@ -123,17 +262,6 @@ function writeFirebase(){
 //main();
 //writeFirebase();
 readFirebase();
-
-
-//setInterval(tick, 1000);
-
-//readfirebase every second to see if updated maze...
-function tick(){
-
-	//readFirebase();
-	console.log("tick");
-}
-
 
 
 function main(){
@@ -144,7 +272,7 @@ wipeObjects();
 
 
 
-console.log(maze);
+//console.log(maze);
 
 var floor = document.createElement('a-entity');
 		floor.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+';');
@@ -172,7 +300,8 @@ var floor = document.createElement('a-entity');
 		ramp.setAttribute('n-mesh-collider','type:environment');
 		ramp.setAttribute('position', '0 '+height/2+' -4');
 		ramp.setAttribute('rotation', '0 0 45');
-
+		ramp.setAttribute('color','red');
+		
 	scene.appendChild(ramp);
 	objects.push(ramp);
 
@@ -203,13 +332,11 @@ var box4 = document.createElement('a-entity');
 for (var i = 0; i<size;i++){
 	for (var j = 0; j < size; j ++){
 	
-		maze[0][0][0] = 1;
+		maze[0][0][0] = 1; //enter
+		maze[size-1][size-1][1]= 1; //exit
 	
-		console.log(i+ ","+j+"| " + maze[i][j]);
-		//console.log(maze[i][j][3])
-		//scene.appendChild(box2);
-		//var box1 = new THREE.Mesh(box1Geo, bMat);
-		//var box2 = new THREE.Mesh(box2Geo, bMat);
+		//console.log(i+ ","+j+"| " + maze[i][j]);
+
 		
 		var box1 = document.createElement('a-entity');
 		box1.setAttribute('geometry', 'primitive: box; width: 0.1; height: '+height+'; depth: '+scale+';');
@@ -242,7 +369,28 @@ for (var i = 0; i<size;i++){
 		
 	}
 }
-}
+}//end main
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //not my code... 
 function newMaze1(x, y) {
