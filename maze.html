@@ -176,14 +176,6 @@ function getUser1(){
 		
 		</a-sky>
 		
-	<!--<a-box id="test" col='boxId:1;' n-mesh-collider="type:hologram" position='0 0 0' scale='10 10 10' opacity='0.5' color='red'></a-box>
-	-->
-	
-	<!--
-	<a-box id="box" n-mesh-collider="type:hologram"; isTrigger=true;" col1="box_id:4;" color="red" position="0 0 0" scale="5 5 5" opacity="0.2">
-	</a-box>
-		
-		-->
 	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="0, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="88.5, 2, 87" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 		
@@ -286,8 +278,8 @@ wipeObjects();
 
 //console.log(maze);
 
-var floor = document.createElement('a-entity');
-		floor.setAttribute('geometry', 'primitive: box; width: '+scale*size'; height:0.1; depth: '+scale*size+';');
+var floor = document.createElement('a-box');
+		floor.setAttribute('scale', scale*size + ' 0.1 ' +scale*size);
 		floor.setAttribute('color','#00FF00');
 		floor.setAttribute('n-mesh-collider','type:environment');
 		floor.setAttribute('position', xShift + (scale*size)/2 + ' 0 ' + (scale*size-2*scale)/2);
@@ -296,7 +288,6 @@ var floor = document.createElement('a-entity');
 	objects.push(floor);
 
 	var roof = document.createElement('a-box');
-		//roof.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+'; ');
 		roof.setAttribute('scale', scale*size + ' 0.1 ' +scale*size);
 		roof.setAttribute('opacity','0.25');
 		roof.setAttribute('n-mesh-collider','type:environment');
