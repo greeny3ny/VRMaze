@@ -287,7 +287,7 @@ wipeObjects();
 //console.log(maze);
 
 var floor = document.createElement('a-entity');
-		floor.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+';');
+		floor.setAttribute('geometry', 'primitive: box; width: '+scale*size'; height:0.1; depth: '+scale*size+';');
 		floor.setAttribute('color','#00FF00');
 		floor.setAttribute('n-mesh-collider','type:environment');
 		floor.setAttribute('position', xShift + (scale*size)/2 + ' 0 ' + (scale*size-2*scale)/2);
