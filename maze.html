@@ -213,6 +213,7 @@ var fbGameRef = new Firebase("https://vrmaze-b0810.firebaseio.com");
 var size = 16;
 var scale = 3;
 var height = 4;
+var xShift = 10;
 var maze = newMaze1(size,size);
 var objects = [];
 //console.log(maze);
@@ -289,7 +290,7 @@ var floor = document.createElement('a-entity');
 		floor.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+';');
 		floor.setAttribute('color','#00FF00');
 		floor.setAttribute('n-mesh-collider','type:environment');
-		floor.setAttribute('position', (scale*size)/2 + ' 0 ' + (scale*size-2*scale)/2);
+		floor.setAttribute('position', xShift + (scale*size)/2 + ' 0 ' + (scale*size-2*scale)/2);
 
 	scene.appendChild(floor);
 	objects.push(floor);
@@ -299,7 +300,7 @@ var floor = document.createElement('a-entity');
 		roof.setAttribute('scale', scale*size + ' 0.1 ' +scale*size);
 		roof.setAttribute('opacity','0.25');
 		roof.setAttribute('n-mesh-collider','type:environment');
-		roof.setAttribute('position', (scale*size)/2 + ' '+height+' ' + (scale*size-2*scale)/2);
+		roof.setAttribute('position', xShift + (scale*size)/2 + ' '+height+' ' + (scale*size-2*scale)/2);
 
 	scene.appendChild(roof);
 	objects.push(roof);
@@ -309,7 +310,7 @@ var floor = document.createElement('a-entity');
 		ramp.setAttribute('scale', height + ' 0.1 2');
 		ramp.setAttribute('opacity','0.25');
 		ramp.setAttribute('n-mesh-collider','type:environment');
-		ramp.setAttribute('position', '0 '+height/2+' -4');
+		ramp.setAttribute('position', 'xShift '+height/2+' -4');
 		ramp.setAttribute('rotation', '0 0 45');
 		ramp.setAttribute('color','red');
 		
@@ -325,14 +326,14 @@ var box3 = document.createElement('a-entity');
 		box3.setAttribute('geometry', 'primitive: box; width: 0.1; height: '+height+'; depth: '+(scale*size)+';');
 		box3.setAttribute('color','#00FF00');
 		box3.setAttribute('n-mesh-collider','type:environment');
-		box3.setAttribute('position', scale*size + ' ' + height/2 + ' ' + (scale*size/2-scale));
+		box3.setAttribute('position', xShift + scale*size + ' ' + height/2 + ' ' + (scale*size/2-scale));
 		box3.setAttribute('opacity','0.5');
 		
 var box4 = document.createElement('a-entity');
 		box4.setAttribute('geometry', 'primitive: box; width: '+ (size*scale) +'; height: '+height+'; depth: 0.1');
 		box4.setAttribute('color','#00FF00');
 		box4.setAttribute('n-mesh-collider','type:environment');
-		box4.setAttribute('position', scale*size/2 + ' '+height/2+' ' + -scale);
+		box4.setAttribute('position', xShift + scale*size/2 + ' '+height/2+' ' + -scale);
 		box4.setAttribute('opacity','0.5');
 		
 		scene.appendChild(box3);
@@ -369,14 +370,14 @@ for (var i = 0; i<size;i++){
 		//top boxes
 		if (maze[i][j][0] == 0 ){
 			//box1.position.set(scale*i,0,scale*(j-0.5));
-			box1.setAttribute('position', scale*i + ' ' +height/2+' ' + scale*(j-0.5));
+			box1.setAttribute('position', xShift + scale*i + ' ' +height/2+' ' + scale*(j-0.5));
 			//sim.scene.add(box1);
 			scene.appendChild(box1);
 			objects.push(box1);
 		}
 		if (maze[i][j][1] == 0 ){
 			//box2.position.set(scale*(i+0.5),0,scale*j);
-			box2.setAttribute('position', scale*(i+0.5) + ' '+height/2+' ' + scale*j);
+			box2.setAttribute('position', xShift + scale*(i+0.5) + ' '+height/2+' ' + scale*j);
 			//sim.scene.add(box2);
 			scene.appendChild(box2);
 			objects.push(box2);
