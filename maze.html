@@ -29,6 +29,10 @@ var time=0;
 var finaltime=0;
 var user;
 var times=[];
+
+
+
+var leaderBoard = [];//testing
 //base collision aframe component code
 
 getUser1();
@@ -64,7 +68,7 @@ AFRAME.registerComponent('base_collision',
 		console.log("box " + self.data.box_id);
 	    //console.log("start");
 		
-		if (self.data.box_id==2 && started==true){
+		if (self.data.box_id===2 && started){
 		
 			//upload time to database
 		
@@ -74,19 +78,19 @@ AFRAME.registerComponent('base_collision',
 			times[1] = finaltime;
 			console.log("final time = " + finaltime);
 			writeFirebase();
-
+			
+			//readFBTimes();
 		
 			console.log("end");
 			started = false;
 		}	
 		
 		
-		if (self.data.box_id == 1 && started==false){
-		time = 0;
-		console.log("ticky");
-		setInterval(tick, 100);
-		started = true;
-		
+		if (self.data.box_id === 1 && !started){
+			time = 0;
+			console.log("ticky");
+			setInterval(tick, 100);
+			started = true;
 		}
 		
 		
@@ -123,11 +127,11 @@ function tick(){
 	time = Math.round(time*10)/10;
 	
 	if (started){
-	document.querySelector('#time').setAttribute('n-text','text:' + time);
+		document.querySelector('#time').setAttribute('n-text','text:' + time);
 	}
 	else 
 	{
-	document.querySelector('#time').setAttribute('n-text','text:' + finaltime);
+		document.querySelector('#time').setAttribute('n-text','text:' + finaltime);
 	}
 	
 	//readFirebase();
@@ -145,6 +149,111 @@ function getUser1(){
 	});
 	
 }
+
+var test = [];
+var counter = 0;
+var top5_board = "";
+var board = "";
+
+function readFBTimes(){
+
+	
+	
+	console.log("reading times...");
+	fbGameRef.child("times").on("child_added", function(snapshot){
+	
+		leaderBoard = snapshot.val();
+		test[counter] = leaderBoard;
+		counter ++;
+		console.log("counter" + counter);
+
+	});
+
+	/*
+	//SOMETHING WRONG WITH THIS CODE
+	//BUT NOT IMPORTANT
+	fbGameRef.child("times").on("child_removed", function(snapshot){
+	
+		leaderBoard = snapshot.val();
+		console.log(leaderBoard);
+		console.log("test:"+ leaderBoard.length);
+		
+		if (leaderBoard.times.length != null){
+			for (var i=0; i<leaderBoard.times.length;i++){
+		
+				test[i] = leaderBoard;
+		
+			}
+		}
+		
+	});
+	*/
+
+	fbGameRef.on("value", function(snap) {
+		console.log("promise over");
+	
+		updateLeaderboard();
+	
+	});
+	
+}
+
+function updateLeaderboard(){
+
+		board="";
+
+		//console.log(test[1]);
+		//console.log(counter);
+	
+		//SORT TEST TIMES
+		sortTimes();
+	
+	//only display top 5 to big leaderboard
+	for (var i=0; i<test.length;i++){
+		console.log(test[i].times);
+		board = board + "\n" + test[i].times;
+		
+		if (i < 5){
+			top5_board = top5_board + "\n" + test[i].times;
+		}
+			
+	}
+
+	document.querySelector('#lb_top5').setAttribute('n-text','text:' + top5_board);
+	document.querySelector('#leaderboard').setAttribute('n-text','text:' + board);
+
+};
+
+function sortTimes(){
+
+	var swapped;
+
+	do {
+	swapped = false;
+	for (var i=0; i<(test.length-1);i++){
+		console.log("sorting");
+		//bubble sort for now - should upgrade to quicksort for efficiency
+		
+		if (test[i].times[1] > test[i+1].times[1]){
+			
+			var temp = test[i];
+			test[i] = test[i+1];
+			test[i+1] = temp;
+			swapped = true;
+		}
+				
+	}//end for
+	} while (swapped);
+	
+	for (var i =0; i<test.length;i++){
+		console.log(test[i].times[1]);
+	}
+	
+	
+}
+
+
+readFBTimes();
 
 
 </script>
@@ -170,14 +279,16 @@ function getUser1(){
 
 	<a-entity position='4 8 -6' rotation='0 0 0' n-text='text: Craigs Maze! ;'></a-entity>
 	<a-entity id='time' scale="4 4 4" position='86 3 100' rotation='0 180 0' n-text='text: timer;'></a-entity>
+	<a-entity id='lb_top5' scale="5 5 5" position='40 50 15' n-text='text: test;'>
+		<a-animation attribute="rotation" dur="50000" easing="linear" to="0 360 0" repeat="indefinite"></a-animation>
+	</a-entity>
 
-	 <a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6">
+	<a-entity id='leaderboard' scale="1 1 1" position='0 10 0' n-text='text: test;'></a-entity>
+	
+	 <a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6"></a-sky>
 		
-		
-		</a-sky>
-		
-	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="0, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
-	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="88.5, 2, 87" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="56.5, 2, 45" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 		
 		
 </a-scene>
@@ -209,6 +320,8 @@ var xShift = 10;
 var maze = newMaze1(size,size);
 var objects = [];
 //console.log(maze);
+
+
 
 var box1Geo = new THREE.BoxGeometry(1, 1, 1); 
 
@@ -252,6 +365,7 @@ function readFirebase(){
 	});
 
 }
+
 
 function writeFirebase(){
 
@@ -301,7 +415,7 @@ var floor = document.createElement('a-box');
 		ramp.setAttribute('scale', height + ' 0.1 2');
 		ramp.setAttribute('opacity','0.25');
 		ramp.setAttribute('n-mesh-collider','type:environment');
-		ramp.setAttribute('position', 'xShift '+height/2+' -4');
+		ramp.setAttribute('position', xShift + ' ' +height/2+' -4');
 		ramp.setAttribute('rotation', '0 0 45');
 		ramp.setAttribute('color','red');
 		
@@ -339,10 +453,7 @@ for (var i = 0; i<size;i++){
 	
 		maze[0][0][0] = 1; //enter
 		maze[size-1][size-1][1]= 1; //exit
-	
-		//console.log(i+ ","+j+"| " + maze[i][j]);
 
-		
 		var box1 = document.createElement('a-entity');
 		box1.setAttribute('geometry', 'primitive: box; width: 0.1; height: '+height+'; depth: '+scale+';');
 		box1.setAttribute('color','#00FF00');
@@ -359,14 +470,14 @@ for (var i = 0; i<size;i++){
 		//box2.collider = true;
 		
 		//top boxes
-		if (maze[i][j][0] == 0 ){
+		if (maze[i][j][0] === 0 ){
 			//box1.position.set(scale*i,0,scale*(j-0.5));
 			box1.setAttribute('position', xShift + scale*i + ' ' +height/2+' ' + scale*(j-0.5));
 			//sim.scene.add(box1);
 			scene.appendChild(box1);
 			objects.push(box1);
 		}
-		if (maze[i][j][1] == 0 ){
+		if (maze[i][j][1] === 0 ){
 			//box2.position.set(scale*(i+0.5),0,scale*j);
 			box2.setAttribute('position', xShift + scale*(i+0.5) + ' '+height/2+' ' + scale*j);
 			//sim.scene.add(box2);
@@ -380,21 +491,7 @@ for (var i = 0; i<size;i++){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//readFBTimes();
 
 
 
