@@ -90,6 +90,10 @@ AFRAME.registerComponent('base_collision',
 			time = 0;
 			console.log("ticky");
 			setInterval(tick, 100);
+			
+			document.querySelector('#pc-m').emit('m');
+			document.querySelector('#gear-m').emit('m');
+			
 			started = true;
 		}
 		
@@ -201,6 +205,7 @@ function readFBTimes(){
 function updateLeaderboard(){
 
 		board="";
+		top5_board="";
 
 		//console.log(test[1]);
 		//console.log(counter);
@@ -274,7 +279,12 @@ readFBTimes();
     <!--<a-text value="Hello, World!"></a-text>-->
 
     <a-assets>
-
+		<img id="test" src="assets/test.png" />
+		<img id="b1" src="assets/bush1.png" />
+		<img id="b2" src="assets/bush2.png" />
+		<img id="b3" src="assets/bush3.png" />
+		<img id="b4" src="assets/bush4.png" />
+		<img id="floor" src="assets/floor.png" />
   	</a-assets>
 
 	<a-entity position='4 8 -6' rotation='0 0 0' n-text='text: Craigs Maze! ;'></a-entity>
@@ -289,7 +299,10 @@ readFBTimes();
 		
 	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="56.5, 2, 45" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
-		
+	
+	<a-entity id="pc-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg;"></a-entity>
+	<a-entity id="gear-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3;"></a-entity>
+	
 		
 </a-scene>
  
@@ -302,10 +315,8 @@ altspace.getEnclosure().then(function(enclosure){
         enclosure.requestFullspace().then(function(){
 				
 		
-//--- synchronisation
 var utilities = altspace.utilities;
 var behaviors = altspace.utilities.behaviors;
-//sync doesnt work yet :(
 var sim = new utilities.Simulation();
 var inCodePen = utilities.codePen.inCodePen;
 var instanceRef;
@@ -397,7 +408,8 @@ var floor = document.createElement('a-box');
 		floor.setAttribute('color','#00FF00');
 		floor.setAttribute('n-mesh-collider','type:environment');
 		floor.setAttribute('position', xShift + (scale*size)/2 + ' 0 ' + (scale*size-2*scale)/2);
-
+		floor.setAttribute('src','#floor');
+		
 	scene.appendChild(floor);
 	objects.push(floor);
 
@@ -422,24 +434,19 @@ var floor = document.createElement('a-box');
 	scene.appendChild(ramp);
 	objects.push(ramp);
 
-
-
-
-
-
-var box3 = document.createElement('a-entity');
-		box3.setAttribute('geometry', 'primitive: box; width: 0.1; height: '+height+'; depth: '+(scale*size)+';');
-		box3.setAttribute('color','#00FF00');
+//side 1	
+var box3 = document.createElement('a-box');
+		box3.setAttribute('scale', '0.1 ' +height+ ' '+scale*size);
 		box3.setAttribute('n-mesh-collider','type:environment');
 		box3.setAttribute('position', xShift + scale*size + ' ' + height/2 + ' ' + (scale*size/2-scale));
-		box3.setAttribute('opacity','0.5');
-		
-var box4 = document.createElement('a-entity');
-		box4.setAttribute('geometry', 'primitive: box; width: '+ (size*scale) +'; height: '+height+'; depth: 0.1');
-		box4.setAttribute('color','#00FF00');
+		box3.setAttribute('src','#b1');
+	
+//side 2
+var box4 = document.createElement('a-box');
+		box4.setAttribute('scale', size*scale + ' ' +height+ ' 0.1');
 		box4.setAttribute('n-mesh-collider','type:environment');
 		box4.setAttribute('position', xShift + scale*size/2 + ' '+height/2+' ' + -scale);
-		box4.setAttribute('opacity','0.5');
+		box4.setAttribute('src','#b1');
 		
 		scene.appendChild(box3);
 		scene.appendChild(box4);
@@ -454,18 +461,29 @@ for (var i = 0; i<size;i++){
 		maze[0][0][0] = 1; //enter
 		maze[size-1][size-1][1]= 1; //exit
 
+		/*
 		var box1 = document.createElement('a-entity');
 		box1.setAttribute('geometry', 'primitive: box; width: 0.1; height: '+height+'; depth: '+scale+';');
 		box1.setAttribute('color','#00FF00');
 		box1.setAttribute('n-mesh-collider','type:environment');
 		box1.setAttribute('opacity','0.5');
+		*/
+			
+		var bushRandom1 = Math.floor((Math.random() * 4) + 1);
+		var bushRandom2 = Math.floor((Math.random() * 4) + 1);
+			
+		var box1 = document.createElement('a-box');
+		box1.setAttribute('scale', '0.1 ' + height + ' ' + scale);
+		box1.setAttribute('src','#b'+bushRandom1);
+		box1.setAttribute('n-mesh-collider','type:environment');
 		
-		var box2 = document.createElement('a-entity');
-		box2.setAttribute('geometry', 'primitive: box; width: ' +scale+ '; height: '+height+'; depth: 0.1;');
-		box2.setAttribute('color','#00FF00');
+		
+		
+		
+		var box2 = document.createElement('a-box');
+		box2.setAttribute('scale', scale+' ' + height + ' 0.1');
+		box2.setAttribute('src','#b'+bushRandom2);
 		box2.setAttribute('n-mesh-collider','type:environment');
-		box2.setAttribute('opacity','0.5');
-		
 		
 		//box2.collider = true;
 		
