@@ -89,22 +89,15 @@ AFRAME.registerComponent('base_collision',
 		if (self.data.box_id === 1 && !started){
 			time = 0;
 			console.log("ticky");
-			setInterval(tick, 100);
 			
 			document.querySelector('#pc-m').emit('m');
 			document.querySelector('#gear-m').emit('m');
 			
 			started = true;
 		}
-		
-		
-		
+				
 		//readfirebase every second to see if updated maze...
-	
-		
-	
-		
-		
+
     }// end function handle join
 	
 	//joint collision leave
@@ -124,6 +117,7 @@ function writeFirebase(){
 	//readFirebase();
 }
 
+setInterval(tick, 100);
 
 function tick(){
 
@@ -137,9 +131,6 @@ function tick(){
 	{
 		document.querySelector('#time').setAttribute('n-text','text:' + finaltime);
 	}
-	
-	//readFirebase();
-	//console.log(time);
 	
 }
 
@@ -204,11 +195,8 @@ function readFBTimes(){
 
 function updateLeaderboard(){
 
-		board="";
-		top5_board="";
-
-		//console.log(test[1]);
-		//console.log(counter);
+		board="Highscores:";
+		top5_board="Top 5:";
 	
 		//SORT TEST TIMES
 		sortTimes();
@@ -216,10 +204,10 @@ function updateLeaderboard(){
 	//only display top 5 to big leaderboard
 	for (var i=0; i<test.length;i++){
 		console.log(test[i].times);
-		board = board + "\n" + test[i].times;
+		board = board + "\n" + (i+1) + ": " + test[i].times;
 		
 		if (i < 5){
-			top5_board = top5_board + "\n" + test[i].times;
+			top5_board =  top5_board + "\n" + (i+1) + ": " + test[i].times;
 		}
 			
 	}
@@ -285,17 +273,20 @@ readFBTimes();
 		<img id="b3" src="assets/bush3.png" />
 		<img id="b4" src="assets/bush4.png" />
 		<img id="floor" src="assets/floor.png" />
+	
+		<a-asset-item id="obj" src="https://greeny3ny.github.io/models/skeleton/model.obj"></a-asset-item>
+		<a-asset-item id="mat" src="https://greeny3ny.github.io/models/skeleton/materials.mtl"></a-asset-item>
+		
   	</a-assets>
 
-	<a-entity position='4 8 -6' rotation='0 0 0' n-text='text: Craigs Maze! ;'></a-entity>
 	<a-entity id='time' scale="4 4 4" position='86 3 100' rotation='0 180 0' n-text='text: timer;'></a-entity>
 	<a-entity id='lb_top5' scale="5 5 5" position='40 50 15' n-text='text: test;'>
 		<a-animation attribute="rotation" dur="50000" easing="linear" to="0 360 0" repeat="indefinite"></a-animation>
 	</a-entity>
 
-	<a-entity id='leaderboard' scale="1 1 1" position='0 10 0' n-text='text: test;'></a-entity>
+	<a-entity id='leaderboard' scale="1 1 1" position='0 12 -9.45' n-text='text: test;'></a-entity>
 	
-	 <a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6"></a-sky>
+	<a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6"></a-sky>
 		
 	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="56.5, 2, 45" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
@@ -303,7 +294,14 @@ readFBTimes();
 	<a-entity id="pc-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg;"></a-entity>
 	<a-entity id="gear-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3;"></a-entity>
 	
-		
+	<a-box position="0 12 -10" scale="10 24 1" color=black></a-box>
+	
+	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
+	<a-entity id="ramp" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:1.5 1.5;" position="9 1 5" rotation="-30 0 0" scale="2 1 10"></a-entity>
+	<a-entity id="ramp_top" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:0.5 0.5;" position="9 3.41 10.2" rotation="0 0 0" scale="2 1 2.3"></a-entity>
+	<a-entity id="side1" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b2; repeat:10 1;" position="58 2 21" scale="0.1 4 48"></a-entity>
+	<a-entity id="side2" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b3; repeat:10 1;" position="34 2 -3" scale="48 4 0.1"></a-entity>
+	
 </a-scene>
  
 </body>
@@ -346,15 +344,12 @@ var bMat = new THREE.MeshBasicMaterial({
 var newMaze = new THREE.Mesh(box1Geo, bMat);
 
 var endbox = new THREE.Mesh(box1Geo, bMat);
-//var box4 = new THREE.Mesh(box4Geo, bMat);
 
 newMaze.position.set(-1, 0, -1);
 endbox.position.set((scale*size), 5, (scale*size)-scale);
-//box4.position.set(scale*size/2,0,-scale);
 
 sim.scene.add(newMaze);
 //sim.scene.add(endbox);
-
 
 
 function wipeObjects(){
@@ -398,21 +393,6 @@ function main(){
 
 wipeObjects();
 
-
-
-
-//console.log(maze);
-
-var floor = document.createElement('a-box');
-		floor.setAttribute('scale', scale*size + ' 0.1 ' +scale*size);
-		floor.setAttribute('color','#00FF00');
-		floor.setAttribute('n-mesh-collider','type:environment');
-		floor.setAttribute('position', xShift + (scale*size)/2 + ' 0 ' + (scale*size-2*scale)/2);
-		floor.setAttribute('src','#floor');
-		
-	scene.appendChild(floor);
-	objects.push(floor);
-
 	var roof = document.createElement('a-box');
 		roof.setAttribute('scale', scale*size + ' 0.1 ' +scale*size);
 		roof.setAttribute('opacity','0.25');
@@ -422,38 +402,10 @@ var floor = document.createElement('a-box');
 	scene.appendChild(roof);
 	objects.push(roof);
 	
-	var ramp = document.createElement('a-box');
-		//roof.setAttribute('geometry', 'primitive: box; width: '+scale*size+'; height:0.1; depth: '+scale*size+'; ');
-		ramp.setAttribute('scale', height + ' 0.1 2');
-		ramp.setAttribute('opacity','0.25');
-		ramp.setAttribute('n-mesh-collider','type:environment');
-		ramp.setAttribute('position', xShift + ' ' +height/2+' -4');
-		ramp.setAttribute('rotation', '0 0 45');
-		ramp.setAttribute('color','red');
-		
-	scene.appendChild(ramp);
-	objects.push(ramp);
-
-//side 1	
-var box3 = document.createElement('a-box');
-		box3.setAttribute('scale', '0.1 ' +height+ ' '+scale*size);
-		box3.setAttribute('n-mesh-collider','type:environment');
-		box3.setAttribute('position', xShift + scale*size + ' ' + height/2 + ' ' + (scale*size/2-scale));
-		box3.setAttribute('src','#b1');
 	
-//side 2
-var box4 = document.createElement('a-box');
-		box4.setAttribute('scale', size*scale + ' ' +height+ ' 0.1');
-		box4.setAttribute('n-mesh-collider','type:environment');
-		box4.setAttribute('position', xShift + scale*size/2 + ' '+height/2+' ' + -scale);
-		box4.setAttribute('src','#b1');
-		
-		scene.appendChild(box3);
-		scene.appendChild(box4);
-		
-		objects.push(box3);
-		objects.push(box4);
-		
+	var tbox = document.createElement('a-box');
+		tbox.setAttribute('scale', '1 1 1');
+		tbox.setAttribute('n-mesh-collider','type:environment');
 
 for (var i = 0; i<size;i++){
 	for (var j = 0; j < size; j ++){
@@ -461,14 +413,6 @@ for (var i = 0; i<size;i++){
 		maze[0][0][0] = 1; //enter
 		maze[size-1][size-1][1]= 1; //exit
 
-		/*
-		var box1 = document.createElement('a-entity');
-		box1.setAttribute('geometry', 'primitive: box; width: 0.1; height: '+height+'; depth: '+scale+';');
-		box1.setAttribute('color','#00FF00');
-		box1.setAttribute('n-mesh-collider','type:environment');
-		box1.setAttribute('opacity','0.5');
-		*/
-			
 		var bushRandom1 = Math.floor((Math.random() * 4) + 1);
 		var bushRandom2 = Math.floor((Math.random() * 4) + 1);
 			
@@ -477,42 +421,71 @@ for (var i = 0; i<size;i++){
 		box1.setAttribute('src','#b'+bushRandom1);
 		box1.setAttribute('n-mesh-collider','type:environment');
 		
-		
-		
-		
 		var box2 = document.createElement('a-box');
 		box2.setAttribute('scale', scale+' ' + height + ' 0.1');
 		box2.setAttribute('src','#b'+bushRandom2);
 		box2.setAttribute('n-mesh-collider','type:environment');
 		
+		var tbox = document.createElement('a-box');
+		tbox.setAttribute('scale', '3 3 3');
+		//tbox.setAttribute('n-mesh-collider','type:environment');
+		tbox.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
+		
 		//box2.collider = true;
 		
 		//top boxes
 		if (maze[i][j][0] === 0 ){
-			//box1.position.set(scale*i,0,scale*(j-0.5));
 			box1.setAttribute('position', xShift + scale*i + ' ' +height/2+' ' + scale*(j-0.5));
-			//sim.scene.add(box1);
 			scene.appendChild(box1);
 			objects.push(box1);
 		}
 		if (maze[i][j][1] === 0 ){
-			//box2.position.set(scale*(i+0.5),0,scale*j);
 			box2.setAttribute('position', xShift + scale*(i+0.5) + ' '+height/2+' ' + scale*j);
-			//sim.scene.add(box2);
 			scene.appendChild(box2);
 			objects.push(box2);
 		}
 		
+		var skeletonRandom = Math.floor((Math.random() * 3) + 1);
+		
+		if (skeletonRandom === 1){
+		//deadend 1
+			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][2]===0){
+				console.log("test")
+				tbox.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.25));
+				scene.appendChild(tbox);
+				objects.push(tbox);
+			}
+		
+			if (maze[i][j][1]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
+				console.log("test")
+				tbox.setAttribute('position', xShift+scale*i+2.25 + ' 1 '+ scale*(j-0.5));
+				tbox.setAttribute('rotation', '0 90 0');
+				scene.appendChild(tbox);
+				objects.push(tbox);
+			}
+		
+			if (maze[i][j][0]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
+				console.log("test")
+				tbox.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.75));
+				tbox.setAttribute('rotation', '0 180 0');
+				scene.appendChild(tbox);
+				objects.push(tbox);
+			}
+		
+			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][3]===0){
+				console.log("test")
+				tbox.setAttribute('position', xShift+scale*i+0.75 + ' 1 '+ scale*(j-0.5));
+				tbox.setAttribute('rotation', '0 -90 0');
+				scene.appendChild(tbox);
+				objects.push(tbox);
+			}
+		}
+		
+		
+		
 	}
 }
 }//end main
-
-
-
-//readFBTimes();
-
-
-
 
 //not my code... 
 function newMaze1(x, y) {
@@ -574,8 +547,6 @@ function newMaze1(x, y) {
 }
 
 newMaze.addEventListener('cursordown', function(){
-	//console.log("123");
-	//console.log(newMaze1(size,size));
 	maze = newMaze1(size,size);
 	writeFirebase();
 	
