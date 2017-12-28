@@ -125,11 +125,11 @@ function tick(){
 	time = Math.round(time*10)/10;
 	
 	if (started){
-		document.querySelector('#time').setAttribute('n-text','text:' + time);
+		document.querySelector('#time').setAttribute('n-text','text: Your time is : ' + time);
 	}
 	else 
 	{
-		document.querySelector('#time').setAttribute('n-text','text:' + finaltime);
+		document.querySelector('#time').setAttribute('n-text','text: Your time is : ' + finaltime);
 	}
 	
 }
@@ -279,7 +279,7 @@ readFBTimes();
 		
   	</a-assets>
 
-	<a-entity id='time' scale="4 4 4" position='86 3 100' rotation='0 180 0' n-text='text: timer;'></a-entity>
+	
 	<a-entity id='lb_top5' scale="5 5 5" position='40 50 15' n-text='text: test;'>
 		<a-animation attribute="rotation" dur="50000" easing="linear" to="0 360 0" repeat="indefinite"></a-animation>
 	</a-entity>
@@ -299,8 +299,20 @@ readFBTimes();
 	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
 	<a-entity id="ramp" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:1.5 1.5;" position="9 1 5" rotation="-30 0 0" scale="2 1 10"></a-entity>
 	<a-entity id="ramp_top" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:0.5 0.5;" position="9 3.41 10.2" rotation="0 0 0" scale="2 1 2.3"></a-entity>
-	<a-entity id="side1" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b2; repeat:10 1;" position="58 2 21" scale="0.1 4 48"></a-entity>
+	<a-entity id="side1" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b2; repeat:20 1;" position="58 2 27" scale="0.1 4 60"></a-entity>
 	<a-entity id="side2" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b3; repeat:10 1;" position="34 2 -3" scale="48 4 0.1"></a-entity>
+	<a-box id="roof" n-mesh-collider="type:environment" position="34 4 21" opacity=0.25 scale="48 0.1 48"></a-box>
+	
+	<a-entity id="start" position="0 2 0"></a-entity>
+	
+	<a-entity id="end_portal" position="54 0.5 55" rotation="0 180 0" n-portal="targetEntity:#start" n-text="text:Back To Start; fontSize:5"></a-entity>
+	<a-entity id='time' scale="1 1 1" position='54 3 55' rotation='0 180 0' n-text='text: timer;'></a-entity>
+	
+	<a-entity geometry="primitive:box" n-mesh-collider="type:environment" position="54 2 57" scale="8 4 1" material="src:#b3; repeat:3 1;"></a-entity>
+	
+	<a-entity id="side3" geometry="primitive:box"  material="src:#b4; repeat:4 1;" n-mesh-collider="type:environment" position="50 2 51" scale="0.1 4 12"></a-entity> <!--  -->
+	
+	<a-box id="roof_end" n-mesh-collider="type:environment" position="54 4 51" opacity=0.25 scale="8 0.1 12"></a-box>
 	
 </a-scene>
  
@@ -392,16 +404,6 @@ function main(){
 
 
 wipeObjects();
-
-	var roof = document.createElement('a-box');
-		roof.setAttribute('scale', scale*size + ' 0.1 ' +scale*size);
-		roof.setAttribute('opacity','0.25');
-		roof.setAttribute('n-mesh-collider','type:environment');
-		roof.setAttribute('position', xShift + (scale*size)/2 + ' '+height+' ' + (scale*size-2*scale)/2);
-
-	scene.appendChild(roof);
-	objects.push(roof);
-	
 	
 	var tbox = document.createElement('a-box');
 		tbox.setAttribute('scale', '1 1 1');
