@@ -80,7 +80,7 @@ AFRAME.registerComponent('base_collision',
 			writeFirebase();
 			
 			//readFBTimes();
-		
+			//stop song
 			document.querySelector('#pc-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg; volume:0;');
 			document.querySelector('#gear-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3; volume:0;');
 		
@@ -92,6 +92,10 @@ AFRAME.registerComponent('base_collision',
 		if (self.data.box_id === 1 && !started){
 			time = 0;
 			console.log("ticky");
+			
+			//reset volume
+			document.querySelector('#pc-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg; volume:1;');
+			document.querySelector('#gear-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3; volume:1;');
 			
 			document.querySelector('#pc-m').emit('m');
 			document.querySelector('#gear-m').emit('m');
