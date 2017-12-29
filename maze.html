@@ -81,6 +81,9 @@ AFRAME.registerComponent('base_collision',
 			
 			//readFBTimes();
 		
+			document.querySelector('#pc-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg; volume:0;');
+			document.querySelector('#gear-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3; volume:0;');
+		
 			console.log("end");
 			started = false;
 		}	
@@ -137,6 +140,7 @@ function tick(){
 function getUser1(){
 	
 	altspace.getUser().then(function(user1){
+		console.log(user1);
 		user = user1.displayName;
 		console.log(user);
 		//sets timeout to deal with latency issues - kinda works
@@ -291,8 +295,8 @@ readFBTimes();
 	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="56.5, 2, 45" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	
-	<a-entity id="pc-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg;"></a-entity>
-	<a-entity id="gear-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3;"></a-entity>
+	<a-entity id="pc-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg; volume:1;"></a-entity>
+	<a-entity id="gear-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3; volume:1;"></a-entity>
 	
 	<a-box position="0 12 -10" scale="10 24 1" color=black></a-box>
 	
@@ -314,15 +318,54 @@ readFBTimes();
 	
 	<a-box id="roof_end" n-mesh-collider="type:environment" position="54 4 51" opacity=0.25 scale="8 0.1 12"></a-box>
 	
+	<a-entity id='message' scale="1 1 1" position='0 5 15' rotation="0 180 0" n-text='fontSize:4; width:100; 
+	text: Note: Maze Generation Code is NOT mine
+	All credit to maze code goes to dstromberg2 on github
+	
+	https://github.com/dstromberg2/maze-generator
+	
+	I simply used his algorithm that created the maze and adapted it for AltspaceVR
+	
+	Skeleton Models made by Lia
+	
+	Music is "Bushes of Love" by Bad Lip Reading
+	https://www.youtube.com/watch?v=RySHDUU2juM
+	;'></a-entity>
+	
+	
+	<a-entity id='MB' scale="1 1 1" position='-10 1 -10' n-text='fontSize:4; width:100;
+	text: 
+	Magic Reset button
+	Lia , Craig and Mods ONLY
+	; '></a-entity>
+	
+	
 </a-scene>
  
 </body>
 
 <script>
 //this kinda works but messes stuff up 
+var userID;
+var isMod = false;
 
 altspace.getEnclosure().then(function(enclosure){
         enclosure.requestFullspace().then(function(){
+		
+		
+	altspace.getUser().then(function(user1){
+		userID = user1.userId;
+		isMod = user1.isModerator;
+		console.log(userID + " " + isMod);
+		//gets userID for button pressing later on
+	});
+		
+		
+		
+		
+		
+		
+		
 				
 		
 var utilities = altspace.utilities;
@@ -357,7 +400,7 @@ var newMaze = new THREE.Mesh(box1Geo, bMat);
 
 var endbox = new THREE.Mesh(box1Geo, bMat);
 
-newMaze.position.set(-1, 0, -1);
+newMaze.position.set(-10, 0, -10);
 endbox.position.set((scale*size), 5, (scale*size)-scale);
 
 sim.scene.add(newMaze);
@@ -549,8 +592,16 @@ function newMaze1(x, y) {
 }
 
 newMaze.addEventListener('cursordown', function(){
-	maze = newMaze1(size,size);
-	writeFirebase();
+
+	//Craig, Lia and mods only
+	if (userID == 647102026148217336 || userID == 403147243432968910 || isMod){
+		console.log("a mod has clicked");
+		maze = newMaze1(size,size);
+		writeFirebase();
+	}
+
+	//maze = newMaze1(size,size);
+	//writeFirebase();
 	
 });
 
