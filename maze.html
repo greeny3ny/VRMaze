@@ -72,13 +72,13 @@ AFRAME.registerComponent('base_collision',
 		
 			//upload time to database
 		
-			
-			finaltime = time;
-			times[0] = user;
-			times[1] = finaltime;
-			console.log("final time = " + finaltime);
-			writeFirebase();
-			
+			if (finaltime >= 15){
+				finaltime = time;
+				times[0] = user;
+				times[1] = finaltime;
+				console.log("final time = " + finaltime);
+				writeFirebase();
+			} 
 			//readFBTimes();
 			//stop song
 			document.querySelector('#pc-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg; volume:0;');
@@ -137,6 +137,9 @@ function tick(){
 	else 
 	{
 		document.querySelector('#time').setAttribute('n-text','fontSize:4; text: Your time is : ' + finaltime);
+		if (finaltime <= 15){
+			document.querySelector('#time').setAttribute('n-text','fontSize:4; text: Cheaty McCheaterson');
+		}
 	}
 	
 }
