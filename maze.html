@@ -72,13 +72,13 @@ AFRAME.registerComponent('base_collision',
 		
 			//upload time to database
 		
-			if (finaltime >= 15){
+			//if (finaltime >= 15){
 				finaltime = time;
 				times[0] = user;
 				times[1] = finaltime;
 				console.log("final time = " + finaltime);
 				writeFirebase();
-			} 
+			//} 
 			//readFBTimes();
 			//stop song
 			document.querySelector('#pc-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg; volume:0;');
@@ -137,9 +137,9 @@ function tick(){
 	else 
 	{
 		document.querySelector('#time').setAttribute('n-text','fontSize:4; text: Your time is : ' + finaltime);
-		if (finaltime <= 15){
-			document.querySelector('#time').setAttribute('n-text','fontSize:4; text: Cheaty McCheaterson');
-		}
+		//if (finaltime <= 15){
+		//	document.querySelector('#time').setAttribute('n-text','fontSize:4; text: Cheaty McCheaterson');
+		//}
 	}
 	
 }
@@ -307,7 +307,7 @@ readFBTimes();
 	
 	<a-box position="0 12 -10" scale="10 24 1" color=black></a-box>
 	
-	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
+	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:object" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
 	<a-entity id="ramp" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:1.5 1.5;" position="9 1 5" rotation="-30 0 0" scale="2 1 10"></a-entity>
 	<a-entity id="ramp_top" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:0.5 0.5;" position="9 3.41 10.2" rotation="0 0 0" scale="2 1 2.3"></a-entity>
 	<a-entity id="side1" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b2; repeat:20 1;" position="58 2 27" scale="0.1 4 60"></a-entity>
