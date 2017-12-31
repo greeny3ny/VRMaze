@@ -102,19 +102,87 @@ AFRAME.registerComponent('base_collision',
 			
 			started = true;
 		}
+		
+		if (self.data.box_id === 4){
+		
+			console.log("cheat detected");
+			
+			//renders box on players hands when in wall to stop them teleporting
+		
+			document.querySelector('#wallCollideLeft').setAttribute('position', '-1 0 0');
+			document.querySelector('#wallCollideLeft').setAttribute('scale', '0.2 2.5 2.5');
+			document.querySelector('#wallCollideLeft').setAttribute('color', 'blue');
+			document.querySelector('#wallCollideLeft').setAttribute('opacity', '0.5');
+			document.querySelector('#wallCollideLeft').setAttribute('n-skeleton-parent', 'part: head');
+			document.querySelector('#wallCollideLeft').setAttribute('altspace-cursor-collider', 'enabled: true');	
+			document.querySelector('#wallCollideLeft').setAttribute('material', 'src:#b2; repeat:1 1;visible:true');
+			
+			document.querySelector('#wallCollideRight').setAttribute('position', '1 0 0');
+			document.querySelector('#wallCollideRight').setAttribute('scale', '0.2 2.5 2.5');
+			document.querySelector('#wallCollideRight').setAttribute('color', 'blue');
+			document.querySelector('#wallCollideRight').setAttribute('opacity', '0.5');
+			document.querySelector('#wallCollideRight').setAttribute('material', 'src:#b2; repeat:1 1;visible:true');
+			document.querySelector('#wallCollideRight').setAttribute('n-skeleton-parent', 'part: head');
+			document.querySelector('#wallCollideRight').setAttribute('altspace-cursor-collider', 'enabled: true');
+			
+			document.querySelector('#wallCollideFront').setAttribute('position', '0 0 -1');
+			document.querySelector('#wallCollideFront').setAttribute('scale', '2.5 2.5 0.2');
+			document.querySelector('#wallCollideFront').setAttribute('color', 'blue');
+			document.querySelector('#wallCollideFront').setAttribute('opacity', '0.5');
+			document.querySelector('#wallCollideFront').setAttribute('material', 'src:#b2; repeat:1.5 1.5;visible:true');
+			document.querySelector('#wallCollideFront').setAttribute('n-skeleton-parent', 'part: head');
+			document.querySelector('#wallCollideFront').setAttribute('altspace-cursor-collider', 'enabled: true');
+			
+			document.querySelector('#wallCollideTop').setAttribute('position', '0 1 0');
+			document.querySelector('#wallCollideTop').setAttribute('scale', '2.5 0.2 2.5');
+			document.querySelector('#wallCollideTop').setAttribute('color', 'blue');
+			document.querySelector('#wallCollideTop').setAttribute('opacity', '0.5');
+			document.querySelector('#wallCollideTop').setAttribute('material', 'src:#b2; repeat:1 1;visible:true');
+			document.querySelector('#wallCollideTop').setAttribute('n-skeleton-parent', 'part: head');
+			document.querySelector('#wallCollideTop').setAttribute('altspace-cursor-collider', 'enabled: true');
+			
+			document.querySelector('#wallCollideBottom').setAttribute('position', '0 -0.75 0');
+			document.querySelector('#wallCollideBottom').setAttribute('scale', '2.5 0.2 2.5');
+			document.querySelector('#wallCollideBottom').setAttribute('color', 'blue');
+			document.querySelector('#wallCollideBottom').setAttribute('opacity', '0.5');
+			document.querySelector('#wallCollideBottom').setAttribute('material', 'src:#b2; repeat:1 1;visible:true');
+			document.querySelector('#wallCollideBottom').setAttribute('n-skeleton-parent', 'part: head');
+			document.querySelector('#wallCollideBottom').setAttribute('altspace-cursor-collider', 'enabled: true');
+		}
 				
-		//readfirebase every second to see if updated maze...
-
     }// end function handle join
 	
 	//joint collision leave
     object.addEventListener('jointcollisionleave', handleLeave);
     function handleLeave(event)
     {
-	
+		if (self.data.box_id === 4){
+			console.log("bush collision ended")
+			document.querySelector('#wallCollideLeft').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideLeft').setAttribute('color', 'red');
+			document.querySelector('#wallCollideLeft').setAttribute('position', '0 0 0');
+			
+			document.querySelector('#wallCollideRight').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideRight').setAttribute('color', 'red');
+			document.querySelector('#wallCollideRight').setAttribute('position', '0 0 0');
+			
+			document.querySelector('#wallCollideTop').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideTop').setAttribute('color', 'red');
+			document.querySelector('#wallCollideTop').setAttribute('position', '0 0 0');
+			
+			document.querySelector('#wallCollideBottom').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideBottom').setAttribute('color', 'red');
+			document.querySelector('#wallCollideBottom').setAttribute('position', '0 0 0');
+			
+			document.querySelector('#wallCollideFront').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideFront').setAttribute('color', 'red');
+			document.querySelector('#wallCollideFront').setAttribute('position', '0 0 0');
+		}
     }//end function handle leave
   }
 }); //end base collision
+
+
 
 function writeFirebase(){
 
@@ -137,9 +205,6 @@ function tick(){
 	else 
 	{
 		document.querySelector('#time').setAttribute('n-text','fontSize:4; text: Your time is : ' + finaltime);
-		//if (finaltime <= 15){
-		//	document.querySelector('#time').setAttribute('n-text','fontSize:4; text: Cheaty McCheaterson');
-		//}
 	}
 	
 }
@@ -307,7 +372,7 @@ readFBTimes();
 	
 	<a-box position="0 12 -10" scale="10 24 1" color=black></a-box>
 	
-	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:object" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
+	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
 	<a-entity id="ramp" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:1.5 1.5;" position="9 1 5" rotation="-30 0 0" scale="2 1 10"></a-entity>
 	<a-entity id="ramp_top" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:0.5 0.5;" position="9 3.41 10.2" rotation="0 0 0" scale="2 1 2.3"></a-entity>
 	<a-entity id="side1" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b2; repeat:20 1;" position="58 2 27" scale="0.1 4 60"></a-entity>
@@ -324,6 +389,14 @@ readFBTimes();
 	<a-entity id="side3" geometry="primitive:box"  material="src:#b4; repeat:4 1;" n-mesh-collider="type:environment" position="50 2 51" scale="0.1 4 12"></a-entity> <!--  -->
 	
 	<a-box id="roof_end" n-mesh-collider="type:environment" position="54 4 51" opacity=0.25 scale="8 0.1 12"></a-box>
+	
+	<a-box id="wallCollideLeft"  material="visible:false;"></a-box>
+	<a-box id="wallCollideRight"  material="visible:false;"></a-box>
+	<a-box id="wallCollideTop"  material="visible:false;"></a-box>
+	<a-box id="wallCollideBottom" material="visible:false;"></a-box>
+	<a-box id="wallCollideFront" material="visible:false;"></a-box>
+	
+	
 	
 	<a-entity id='message' scale="1 1 1" position='0 5 15' rotation="0 180 0" n-text='fontSize:4; width:100; 
 	text: Note: Maze Generation Code is NOT mine
@@ -368,15 +441,7 @@ altspace.getEnclosure().then(function(enclosure){
 		console.log(userID + " " + isMod);
 		//gets userID for button pressing later on
 	});
-		
-		
-		
-		
-		
-		
-		
-				
-		
+
 var utilities = altspace.utilities;
 var behaviors = altspace.utilities.behaviors;
 var sim = new utilities.Simulation();
@@ -457,43 +522,52 @@ function main(){
 
 wipeObjects();
 	
-	var tbox = document.createElement('a-box');
-		tbox.setAttribute('scale', '1 1 1');
-		tbox.setAttribute('n-mesh-collider','type:environment');
+	var skeleton = document.createElement('a-box');
+		skeleton.setAttribute('scale', '1 1 1');
+		skeleton.setAttribute('n-mesh-collider','type:environment');
 
+//create walls
 for (var i = 0; i<size;i++){
 	for (var j = 0; j < size; j ++){
 	
 		maze[0][0][0] = 1; //enter
 		maze[size-1][size-1][1]= 1; //exit
 
+		//select random textures
 		var bushRandom1 = Math.floor((Math.random() * 4) + 1);
 		var bushRandom2 = Math.floor((Math.random() * 4) + 1);
 			
-		var box1 = document.createElement('a-box');
-		box1.setAttribute('scale', '0.1 ' + height + ' ' + scale);
-		box1.setAttribute('src','#b'+bushRandom1);
-		box1.setAttribute('n-mesh-collider','type:environment');
+		//create wall of second orientation
 		
-		var box2 = document.createElement('a-box');
-		box2.setAttribute('scale', scale+' ' + height + ' 0.1');
-		box2.setAttribute('src','#b'+bushRandom2);
-		box2.setAttribute('n-mesh-collider','type:environment');
 		
-		var tbox = document.createElement('a-box');
-		tbox.setAttribute('scale', '3 3 3');
-		//tbox.setAttribute('n-mesh-collider','type:environment');
-		tbox.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
-		
-		//box2.collider = true;
-		
-		//top boxes
+		var skeleton = document.createElement('a-box');
+		skeleton.setAttribute('scale', '3 3 3');
+		//skeleton.setAttribute('n-mesh-collider','type:environment');
+		skeleton.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
+
+		//create box only if needed
 		if (maze[i][j][0] === 0 ){
+		
+			var box1 = document.createElement('a-box');
+			box1.setAttribute('scale', '0.1 ' + height + ' ' + scale);
+			box1.setAttribute('src','#b'+bushRandom1);
+			box1.setAttribute('n-mesh-collider','type:environment');
+
+			box1.setAttribute('base_collision','box_id:4');
+		
 			box1.setAttribute('position', xShift + scale*i + ' ' +height/2+' ' + scale*(j-0.5));
 			scene.appendChild(box1);
 			objects.push(box1);
 		}
 		if (maze[i][j][1] === 0 ){
+		
+			var box2 = document.createElement('a-box');
+			box2.setAttribute('scale', scale+' ' + height + ' 0.1');
+			box2.setAttribute('src','#b'+bushRandom2);
+			box2.setAttribute('n-mesh-collider','type:environment');
+			
+			box2.setAttribute('base_collision','box_id:4');
+		
 			box2.setAttribute('position', xShift + scale*(i+0.5) + ' '+height/2+' ' + scale*j);
 			scene.appendChild(box2);
 			objects.push(box2);
@@ -501,39 +575,36 @@ for (var i = 0; i<size;i++){
 		
 		var skeletonRandom = Math.floor((Math.random() * 3) + 1);
 		
+		//only spawn a skeleton 1/3 times
 		if (skeletonRandom === 1){
 		//deadend 1
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][2]===0){
-				console.log("test")
-				tbox.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.25));
-				scene.appendChild(tbox);
-				objects.push(tbox);
+				skeleton.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.25));
+				scene.appendChild(skeleton);
+				objects.push(skeleton);
 			}
 		
 			if (maze[i][j][1]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
-				console.log("test")
-				tbox.setAttribute('position', xShift+scale*i+2.25 + ' 1 '+ scale*(j-0.5));
-				tbox.setAttribute('rotation', '0 90 0');
-				scene.appendChild(tbox);
-				objects.push(tbox);
+				skeleton.setAttribute('position', xShift+scale*i+2.25 + ' 1 '+ scale*(j-0.5));
+				skeleton.setAttribute('rotation', '0 90 0');
+				scene.appendChild(skeleton);
+				objects.push(skeleton);
 			}
 		
 			if (maze[i][j][0]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
-				console.log("test")
-				tbox.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.75));
-				tbox.setAttribute('rotation', '0 180 0');
-				scene.appendChild(tbox);
-				objects.push(tbox);
+				skeleton.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.75));
+				skeleton.setAttribute('rotation', '0 180 0');
+				scene.appendChild(skeleton);
+				objects.push(skeleton);
 			}
 		
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][3]===0){
-				console.log("test")
-				tbox.setAttribute('position', xShift+scale*i+0.75 + ' 1 '+ scale*(j-0.5));
-				tbox.setAttribute('rotation', '0 -90 0');
-				scene.appendChild(tbox);
-				objects.push(tbox);
+				skeleton.setAttribute('position', xShift+scale*i+0.75 + ' 1 '+ scale*(j-0.5));
+				skeleton.setAttribute('rotation', '0 -90 0');
+				scene.appendChild(skeleton);
+				objects.push(skeleton);
 			}
-		}
+		} //end skeleton random
 		
 		
 		
@@ -599,6 +670,31 @@ function newMaze1(x, y) {
     }
     return cells;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 newMaze.addEventListener('cursordown', function(){
 
