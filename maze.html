@@ -29,14 +29,9 @@ var time=0;
 var finaltime=0;
 var user;
 var times=[];
-
-
-
 var leaderBoard = [];//testing
 //base collision aframe component code
-
 getUser1();
-
 AFRAME.registerComponent('base_collision',
                          {
   schema:  //does stuff
@@ -79,10 +74,6 @@ AFRAME.registerComponent('base_collision',
 				console.log("final time = " + finaltime);
 				writeFirebase();
 			//} 
-			//readFBTimes();
-			//stop song
-			//document.querySelector('#pc-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg; volume:0;');
-			//document.querySelector('#gear-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3; volume:0;');
 		
 			console.log("end");
 			started = false;
@@ -92,13 +83,6 @@ AFRAME.registerComponent('base_collision',
 		if (self.data.box_id === 1 && !started){
 			time = 0;
 			console.log("ticky");
-			
-			//reset volume
-			//document.querySelector('#pc-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg; volume:1;');
-			//document.querySelector('#gear-m').setAttribute('n-sound','on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3; volume:1;');
-			
-			//document.querySelector('#pc-m').emit('m');
-			//document.querySelector('#gear-m').emit('m');
 			
 			started = true;
 		}
@@ -181,21 +165,14 @@ AFRAME.registerComponent('base_collision',
     }//end function handle leave
   }
 }); //end base collision
-
-
-
 function writeFirebase(){
-
 	console.log("writing to firebase");
 	fbGameRef.child("times").push({times:times});
 	
 	//readFirebase();
 }
-
 setInterval(tick, 100);
-
 function tick(){
-
 	time+=0.1;
 	time = Math.round(time*10)/10;
 	
@@ -208,7 +185,6 @@ function tick(){
 	}
 	
 }
-
 function getUser1(){
 	
 	altspace.getUser().then(function(user1){
@@ -220,14 +196,11 @@ function getUser1(){
 	});
 	
 }
-
 var test = [];
 var counter = 0;
 var top5_board = "";
 var board = "";
-
 function readFBTimes(){
-
 	
 	
 	console.log("reading times...");
@@ -237,9 +210,7 @@ function readFBTimes(){
 		test[counter] = leaderBoard;
 		counter ++;
 		console.log("counter" + counter);
-
 	});
-
 	/*
 	//SOMETHING WRONG WITH THIS CODE
 	//BUT NOT IMPORTANT
@@ -259,7 +230,6 @@ function readFBTimes(){
 		
 	});
 	*/
-
 	fbGameRef.on("value", function(snap) {
 		console.log("promise over");
 	
@@ -268,9 +238,7 @@ function readFBTimes(){
 	});
 	
 }
-
 function updateLeaderboard(){
-
 		board="Highscores:";
 		top5_board="Top 5:";
 	
@@ -280,23 +248,18 @@ function updateLeaderboard(){
 	//only display top 5 to big leaderboard
 	for (var i=0; i<test.length;i++){
 		console.log(test[i].times);
-		board = board + "\n" + (i+1) + ": " + test[i].times;
+		board = board + "\n" + (i+1) + ": " + test[i].times[0] + " " + test[i].times[1];
 		
 		if (i < 5){
-			top5_board =  top5_board + "\n" + (i+1) + ": " + test[i].times;
+			top5_board =  top5_board + "\n" + (i+1) + ": " + test[i].times[0] + " " + test[i].times[1];
 		}
 			
 	}
-
 	document.querySelector('#lb_top5').setAttribute('n-text','text:' + top5_board);
 	document.querySelector('#leaderboard').setAttribute('n-text','fontSize:4; text:' + board);
-
 };
-
 function sortTimes(){
-
 	var swapped;
-
 	do {
 	swapped = false;
 	for (var i=0; i<(test.length-1);i++){
@@ -320,11 +283,7 @@ function sortTimes(){
 	
 	
 }
-
-
 readFBTimes();
-
-
 </script>
 
 
@@ -367,9 +326,6 @@ readFBTimes();
 	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="56.5, 2, 45" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	
-	<a-entity id="pc-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.ogg; volume:1;"></a-entity>
-	<a-entity id="gear-m" position='40 30 15' n-sound="on: m; src:https://greeny3ny.github.io/VRMaze/assets/bushes.mp3; volume:1;"></a-entity>
-	
 	<a-box position="0 12 -10" scale="10 24 1" color=black></a-box>
 	
 	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
@@ -396,15 +352,9 @@ readFBTimes();
 	<a-box id="wallCollideBottom" material="visible:false;"></a-box>
 	<a-box id="wallCollideFront" material="visible:false;"></a-box>
 	
-	<!--
-	<a-entity position="0 22 -32" rotation="0 5.1 15" scale="4 4 4"
-	     n-layout-browser="url: https://video-jukebox.firebaseapp.com; isEnclosure:true">
-     	</a-entity>
-	-->
-	
-	<a-entity position="0 5 10" rotation="0 180 0" scale="2 2 2"
-	     n-layout-browser="url:https://video-jukebox.firebaseapp.com; isEnclosure:true">
-     	</a-entity>
+	<a-entity position="0 5 0" rotation="0 90 0" scale="5 5 5"
+		n-layout-browser="url:; isEnclosure:true">
+	</a-entity>
 	
 	<a-entity id='message' scale="1 1 1" position='0 5 15' rotation="0 180 0" n-text='fontSize:4; width:100; 
 	text: Note: Maze Generation Code is NOT mine
@@ -417,15 +367,16 @@ readFBTimes();
 	Skeleton Models made by Lia
 	
 	Code by Craig
-	
 	;'></a-entity>
 	
 	
 	<a-entity id='MB' scale="1 1 1" position='-10 1 -10' n-text='fontSize:4; width:100;
 	text: 
-	Magic Reset button
+	Maze Change Timer :
 	Lia , Craig and Mods ONLY
 	; '></a-entity>
+	
+	<a-entity id='mazeChangeTxt' position='-7.5 1.25 -10' rotation='0 0 0' n-text='fontSize:4; text: ---;'></a-entity>
 	
 	
 </a-scene>
@@ -436,7 +387,6 @@ readFBTimes();
 //this kinda works but messes stuff up 
 var userID;
 var isMod = false;
-
 altspace.getEnclosure().then(function(enclosure){
         enclosure.requestFullspace().then(function(){
 		
@@ -447,14 +397,12 @@ altspace.getEnclosure().then(function(enclosure){
 		console.log(userID + " " + isMod);
 		//gets userID for button pressing later on
 	});
-
 var utilities = altspace.utilities;
 var behaviors = altspace.utilities.behaviors;
 var sim = new utilities.Simulation();
 var inCodePen = utilities.codePen.inCodePen;
 var instanceRef;
 var scene = document.querySelector('a-scene');
-
 var fbGameRef = new Firebase("https://vrmaze-b0810.firebaseio.com");
 //---
 var size = 16;
@@ -463,82 +411,70 @@ var height = 4;
 var xShift = 10;
 var maze = newMaze1(size,size);
 var objects = [];
+
+var mazeChangeCount = 300;
+
 //console.log(maze);
-
-
-
 var box1Geo = new THREE.BoxGeometry(1, 1, 1); 
-
 var bTex = new THREE.ImageUtils.loadTexture("assets/test.png");
 var bMat = new THREE.MeshBasicMaterial({ 
     map:bTex, 
     side:THREE.DoubleSide 
 }); 
-
-
 var newMaze = new THREE.Mesh(box1Geo, bMat);
-
 var endbox = new THREE.Mesh(box1Geo, bMat);
-
 newMaze.position.set(-10, 0, -10);
 endbox.position.set((scale*size), 5, (scale*size)-scale);
-
 sim.scene.add(newMaze);
 //sim.scene.add(endbox);
-
-
 function wipeObjects(){
-
 	for (var i=0; i<objects.length; i++){
 		scene.remove(objects[i]);
 	}
-
 }
-
-
-
 function readFirebase(){
-
 	console.log("reading firebase...");
 	fbGameRef.child("maze").on("value", function(snapshot){
 		maze = snapshot.val();
 		main();
 	});
-
 }
-
-
 function writeFirebase(){
-
 	console.log("writing to firebase");
 	fbGameRef.update({maze:maze});
 	
 	//readFirebase();
 }
-
-
-
 //main();
 //writeFirebase();
 readFirebase();
-
-
 function main(){
-
-
 wipeObjects();
 	
 	var skeleton = document.createElement('a-box');
-		skeleton.setAttribute('scale', '1 1 1');
+		skeleton.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
+		skeleton.setAttribute('scale', '9 9 9');
 		skeleton.setAttribute('n-mesh-collider','type:environment');
-
+		skeleton.setAttribute('position', '56.5 1 55');
+		skeleton.setAttribute('rotation', '0 50 0');
+		scene.appendChild(skeleton);
+		objects.push(skeleton);
+		
+	var skeleton2 = document.createElement('a-box');
+		skeleton2.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
+		skeleton2.setAttribute('scale', '9 9 9');
+		skeleton2.setAttribute('n-mesh-collider','type:environment');
+		skeleton2.setAttribute('position', '51.5 1 55');
+		skeleton2.setAttribute('rotation', '0 0 0');
+		scene.appendChild(skeleton2);
+		objects.push(skeleton2);
+		
 //create walls
 for (var i = 0; i<size;i++){
 	for (var j = 0; j < size; j ++){
 	
 		maze[0][0][0] = 1; //enter
 		maze[size-1][size-1][1]= 1; //exit
-
 		//select random textures
 		var bushRandom1 = Math.floor((Math.random() * 4) + 1);
 		var bushRandom2 = Math.floor((Math.random() * 4) + 1);
@@ -547,10 +483,11 @@ for (var i = 0; i<size;i++){
 		
 		
 		var skeleton = document.createElement('a-box');
-		skeleton.setAttribute('scale', '3 3 3');
+		//3,3,3 for skeleton
+		//9,9,9 for pug
+		skeleton.setAttribute('scale', '9 9 9');
 		//skeleton.setAttribute('n-mesh-collider','type:environment');
 		skeleton.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
-
 		//create box only if needed
 		if (maze[i][j][0] === 0 ){
 		
@@ -558,7 +495,6 @@ for (var i = 0; i<size;i++){
 			box1.setAttribute('scale', '0.1 ' + height + ' ' + scale);
 			box1.setAttribute('src','#b'+bushRandom1);
 			box1.setAttribute('n-mesh-collider','type:environment');
-
 			box1.setAttribute('base_collision','box_id:4');
 		
 			box1.setAttribute('position', xShift + scale*i + ' ' +height/2+' ' + scale*(j-0.5));
@@ -586,27 +522,28 @@ for (var i = 0; i<size;i++){
 		//deadend 1
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][2]===0){
 				skeleton.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.25));
+				skeleton.setAttribute('rotation', '0 30 0');
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
 		
 			if (maze[i][j][1]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
 				skeleton.setAttribute('position', xShift+scale*i+2.25 + ' 1 '+ scale*(j-0.5));
-				skeleton.setAttribute('rotation', '0 90 0');
+				skeleton.setAttribute('rotation', '0 120 0');
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
 		
 			if (maze[i][j][0]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
 				skeleton.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.75));
-				skeleton.setAttribute('rotation', '0 180 0');
+				skeleton.setAttribute('rotation', '0 210 0');
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
 		
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][3]===0){
 				skeleton.setAttribute('position', xShift+scale*i+0.75 + ' 1 '+ scale*(j-0.5));
-				skeleton.setAttribute('rotation', '0 -90 0');
+				skeleton.setAttribute('rotation', '0 -60 0');
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
@@ -617,10 +554,8 @@ for (var i = 0; i<size;i++){
 	}
 }
 }//end main
-
 //not my code... 
 function newMaze1(x, y) {
-
     // Establish variables and starting grid
     var totalCells = x*y;
 	var cells = new Array();
@@ -677,32 +612,31 @@ function newMaze1(x, y) {
     return cells;
 }
 
+function mazeChange(){
 
+	console.log("tick " + mazeChangeCount);
+	mazeChangeCount --;
 
+	document.querySelector('#mazeChangeTxt').setAttribute('n-text','fontSize:4; text: ' + mazeChangeCount +';');
+	
+	mazeChangeTxt
+	
+	if (mazeChangeCount < 0){
+	
+		mazeChangeCount = 300;
+	
+		console.log("a mod has clicked");
+		maze = newMaze1(size,size);
+		writeFirebase();
+	
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 newMaze.addEventListener('cursordown', function(){
+	
+	console.log("clickl");
+	//setInterval(mazeChange, 1000);
 
 	//Craig, Lia and mods only
 	if (userID == 647102026148217336 || userID == 403147243432968910 || isMod){
@@ -710,13 +644,10 @@ newMaze.addEventListener('cursordown', function(){
 		maze = newMaze1(size,size);
 		writeFirebase();
 	}
-
-	//maze = newMaze1(size,size);
-	//writeFirebase();
+	maze = newMaze1(size,size);
+	writeFirebase();
 	
 });
-
-
 		});
    });
 </script>
