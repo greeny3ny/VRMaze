@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html><body>
 <script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
-<script src="../../dist/altspace.js"></script>a
+<script src="../../dist/altspace.js"></script>
 <script src="https://sdk.altvr.com/libs/altspace.js/2.4.0/altspace.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.0/nunjucks.min.js"></script>
 <script src="https://rawgit.com/ngokevin/kframe/a1df8fc01514e509ba6d39c964254a1f1043b12b/dist/kframe.min.js"></script>
-
 
 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
 <script>
@@ -238,6 +237,8 @@ function readFBTimes(){
 	});
 	
 }
+
+
 function updateLeaderboard(){
 		board="Highscores:";
 		top5_board="Top 5:";
@@ -327,6 +328,7 @@ readFBTimes();
 	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="56.5, 2, 45" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	
 	<a-box position="0 12 -10" scale="10 24 1" color=black></a-box>
+	<a-box position="10 3 -10" scale="10 6 1" color="black"></a-box>
 	
 	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
 	<a-entity id="ramp" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:1.5 1.5;" position="9 1 5" rotation="-30 0 0" scale="2 1 10"></a-entity>
@@ -369,12 +371,26 @@ readFBTimes();
 	Code by Craig
 	;'></a-entity>
 	
-	
 	<a-entity id='MB' scale="1 1 1" position='-10 1 -10' n-text='fontSize:4; width:100;
 	text: 
 	Maze Change Timer :
 	Lia , Craig and Mods ONLY
 	; '></a-entity>
+	
+	<a-entity id='m5' scale="1 1 1" position='8 3 -9' n-text='fontSize:4; width:100;
+	text: 
+	TOP 5 LAST WEEK :
+				Special Andrew, 18.7
+				gemini1974, 20.9
+				Sloan, 34
+				Njord, 39.1
+				Winrar 48.7
+	; '></a-entity>
+	
+	<!-- 
+	WRITE AN ALGORITHM THAT TAKES AVERAGE TIME OF ALL PERSONS RUN FROM LAST WEEK? 
+	WILL TAKE TIME ???!!!!!
+	-->
 	
 	<a-entity id='mazeChangeTxt' position='-7.5 1.25 -10' rotation='0 0 0' n-text='fontSize:4; text: ---;'></a-entity>
 	
@@ -405,14 +421,16 @@ var instanceRef;
 var scene = document.querySelector('a-scene');
 var fbGameRef = new Firebase("https://vrmaze-b0810.firebaseio.com");
 //---
-var size = 16;
-var scale = 3;
-var height = 4;
-var xShift = 10;
-var maze = newMaze1(size,size);
+const SIZE = 16;
+const SCALE = 3;
+const HEIGHT = 4;
+const X_SHIFT = 10;
+const MAZE_TIME_CHANGE = 120;
+//---
+var maze = newMaze1(SIZE,SIZE);
 var objects = [];
 
-var mazeChangeCount = 300;
+var mazeChangeCount = MAZE_TIME_CHANGE;
 
 //console.log(maze);
 var box1Geo = new THREE.BoxGeometry(1, 1, 1); 
@@ -424,7 +442,7 @@ var bMat = new THREE.MeshBasicMaterial({
 var newMaze = new THREE.Mesh(box1Geo, bMat);
 var endbox = new THREE.Mesh(box1Geo, bMat);
 newMaze.position.set(-10, 0, -10);
-endbox.position.set((scale*size), 5, (scale*size)-scale);
+endbox.position.set((SCALE*SIZE), 5, (SCALE*SIZE)-SCALE);
 sim.scene.add(newMaze);
 //sim.scene.add(endbox);
 function wipeObjects(){
@@ -470,11 +488,11 @@ wipeObjects();
 		objects.push(skeleton2);
 		
 //create walls
-for (var i = 0; i<size;i++){
-	for (var j = 0; j < size; j ++){
+for (var i = 0; i<SIZE;i++){
+	for (var j = 0; j < SIZE; j ++){
 	
 		maze[0][0][0] = 1; //enter
-		maze[size-1][size-1][1]= 1; //exit
+		maze[SIZE-1][SIZE-1][1]= 1; //exit
 		//select random textures
 		var bushRandom1 = Math.floor((Math.random() * 4) + 1);
 		var bushRandom2 = Math.floor((Math.random() * 4) + 1);
@@ -492,25 +510,25 @@ for (var i = 0; i<size;i++){
 		if (maze[i][j][0] === 0 ){
 		
 			var box1 = document.createElement('a-box');
-			box1.setAttribute('scale', '0.1 ' + height + ' ' + scale);
+			box1.setAttribute('scale', '0.1 ' + HEIGHT + ' ' + SCALE);
 			box1.setAttribute('src','#b'+bushRandom1);
 			box1.setAttribute('n-mesh-collider','type:environment');
 			box1.setAttribute('base_collision','box_id:4');
 		
-			box1.setAttribute('position', xShift + scale*i + ' ' +height/2+' ' + scale*(j-0.5));
+			box1.setAttribute('position', X_SHIFT + SCALE*i + ' ' +HEIGHT/2+' ' + SCALE*(j-0.5));
 			scene.appendChild(box1);
 			objects.push(box1);
 		}
 		if (maze[i][j][1] === 0 ){
 		
 			var box2 = document.createElement('a-box');
-			box2.setAttribute('scale', scale+' ' + height + ' 0.1');
+			box2.setAttribute('scale', SCALE+' ' + HEIGHT + ' 0.1');
 			box2.setAttribute('src','#b'+bushRandom2);
 			box2.setAttribute('n-mesh-collider','type:environment');
 			
 			box2.setAttribute('base_collision','box_id:4');
 		
-			box2.setAttribute('position', xShift + scale*(i+0.5) + ' '+height/2+' ' + scale*j);
+			box2.setAttribute('position', X_SHIFT + SCALE*(i+0.5) + ' '+HEIGHT/2+' ' + SCALE*j);
 			scene.appendChild(box2);
 			objects.push(box2);
 		}
@@ -521,28 +539,28 @@ for (var i = 0; i<size;i++){
 		if (skeletonRandom === 1){
 		//deadend 1
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][2]===0){
-				skeleton.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.25));
+				skeleton.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1 '+ SCALE*(j-0.25));
 				skeleton.setAttribute('rotation', '0 30 0');
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
 		
 			if (maze[i][j][1]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
-				skeleton.setAttribute('position', xShift+scale*i+2.25 + ' 1 '+ scale*(j-0.5));
+				skeleton.setAttribute('position', X_SHIFT+SCALE*i+2.25 + ' 1 '+ SCALE*(j-0.5));
 				skeleton.setAttribute('rotation', '0 120 0');
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
 		
 			if (maze[i][j][0]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
-				skeleton.setAttribute('position', xShift+scale*i+1.5 + ' 1 '+ scale*(j-0.75));
+				skeleton.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1 '+ SCALE*(j-0.75));
 				skeleton.setAttribute('rotation', '0 210 0');
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
 		
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][3]===0){
-				skeleton.setAttribute('position', xShift+scale*i+0.75 + ' 1 '+ scale*(j-0.5));
+				skeleton.setAttribute('position', X_SHIFT+SCALE*i+0.75 + ' 1 '+ SCALE*(j-0.5));
 				skeleton.setAttribute('rotation', '0 -60 0');
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
@@ -619,14 +637,12 @@ function mazeChange(){
 
 	document.querySelector('#mazeChangeTxt').setAttribute('n-text','fontSize:4; text: ' + mazeChangeCount +';');
 	
-	mazeChangeTxt
-	
 	if (mazeChangeCount < 0){
 	
-		mazeChangeCount = 300;
+		mazeChangeCount = MAZE_TIME_CHANGE;
 	
 		console.log("a mod has clicked");
-		maze = newMaze1(size,size);
+		maze = newMaze1(SIZE,SIZE);
 		writeFirebase();
 	
 	}
@@ -634,11 +650,19 @@ function mazeChange(){
 }
 
 newMaze.addEventListener('cursordown', function(){
-	
 	console.log("clickl");
 	//setInterval(mazeChange, 1000);
-
+	
+	//change userID to NEW system!!!
+	//IF CRAIG PUSHES THE BUTTON, START THE TICKY TIMER
+	//LOCAL TIMER WILL ONLY COUNT FOR CRAIG, BUT WILL UPDATE MAZE FOR EVERYONE
+	//NEED TO CHANGE THIS!!!
+	if (userID == "SOu3e4smEbJwF-PfyBLBXZzxdOhBtC1PF1nK3D_6ZX0"){
+		setInterval(mazeChange, 1000);
+	}
+	/**
 	//Craig, Lia and mods only
+	//userID's redundant due to sdk change
 	if (userID == 647102026148217336 || userID == 403147243432968910 || isMod){
 		console.log("a mod has clicked");
 		maze = newMaze1(size,size);
@@ -646,7 +670,7 @@ newMaze.addEventListener('cursordown', function(){
 	}
 	maze = newMaze1(size,size);
 	writeFirebase();
-	
+	*/
 });
 		});
    });
