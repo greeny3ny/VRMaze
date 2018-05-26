@@ -640,8 +640,6 @@ function mazeChange(){
 	if (mazeChangeCount < 0){
 	
 		mazeChangeCount = MAZE_TIME_CHANGE;
-	
-		console.log("a mod has clicked");
 		maze = newMaze1(SIZE,SIZE);
 		writeFirebase();
 	
@@ -650,7 +648,7 @@ function mazeChange(){
 }
 
 newMaze.addEventListener('cursordown', function(){
-	console.log("clickl");
+	console.log("click " + isMod);
 	//setInterval(mazeChange, 1000);
 	
 	//change userID to NEW system!!!
