@@ -425,7 +425,7 @@ const SIZE = 16;
 const SCALE = 3;
 const HEIGHT = 4;
 const X_SHIFT = 10;
-const MAZE_TIME_CHANGE = 120;
+const MAZE_TIME_CHANGE = 20;
 //---
 var maze = newMaze1(SIZE,SIZE);
 var objects = [];
@@ -454,6 +454,7 @@ function readFirebase(){
 	console.log("reading firebase...");
 	fbGameRef.child("maze").on("value", function(snapshot){
 		maze = snapshot.val();
+		mazeChangeCount = MAZE_TIME_CHANGE;
 		main();
 	});
 }
@@ -466,6 +467,7 @@ function writeFirebase(){
 //main();
 //writeFirebase();
 readFirebase();
+setInterval(timerTick,1000);
 function main(){
 wipeObjects();
 	
@@ -630,16 +632,16 @@ function newMaze1(x, y) {
     return cells;
 }
 
-function mazeChange(){
-
-	console.log("tick " + mazeChangeCount);
+function timerTick(){
 	mazeChangeCount --;
-
 	document.querySelector('#mazeChangeTxt').setAttribute('n-text','fontSize:4; text: ' + mazeChangeCount +';');
-	
+}
+
+function mazeChange(){
+	console.log("tick " + mazeChangeCount);
 	if (mazeChangeCount < 0){
-	
 		mazeChangeCount = MAZE_TIME_CHANGE;
+		console.log("a mod has clicked");
 		maze = newMaze1(SIZE,SIZE);
 		writeFirebase();
 	
@@ -648,7 +650,7 @@ function mazeChange(){
 }
 
 newMaze.addEventListener('cursordown', function(){
-	console.log("click " + isMod);
+	console.log("clickl");
 	//setInterval(mazeChange, 1000);
 	
 	//change userID to NEW system!!!
