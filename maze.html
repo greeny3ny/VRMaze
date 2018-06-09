@@ -316,7 +316,7 @@ readFBTimes();
 		
   	</a-assets>
 
-	<a-cone id='hat' n-skeleton-parent="part:head" radius-bottom="0.2" radius-top="0" height="0.5" src="#carlos" position="0 0.4 0" sync sync-n-skeleton-parent> </a-cone>
+	<a-cone id='hat' n-skeleton-parent="part:head" radius-bottom="0.2" radius-top="0" height="0.5" src="#carlos" position="0 0.4 0" sync sync-transform> </a-cone>
 	
 	<a-entity id='lb_top5' scale="5 5 5" position='40 50 15' n-text='text: test;'>
 		<a-animation attribute="rotation" dur="50000" easing="linear" to="0 360 0" repeat="indefinite"></a-animation>
@@ -325,7 +325,7 @@ readFBTimes();
 	<a-entity id='leaderboard' scale="1 1 1" position='0 12 -9.45' n-text='text: test;'></a-entity>
 	
 	<!--<a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6"></a-sky>-->
-		<a-sky radius="550" src="#carlos" segments-width="10" segments-height="6"></a-sky>
+		<a-sky radius="550" src="#grass" segments-width="10" segments-height="6"></a-sky>
 		
 	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	
