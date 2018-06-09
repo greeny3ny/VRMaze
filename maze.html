@@ -297,7 +297,7 @@ readFBTimes();
 
 
 <!-- set up the scene -->
-<a-scene altspace>
+<a-scene altspace="fullspace: false" sync-system="author: greeny3ny; app: mazeRace">
  
     <!-- add a view camera (2d only) -->
     <!--<a-text value="Hello, World!"></a-text>-->
@@ -309,12 +309,14 @@ readFBTimes();
 		<img id="b3" src="assets/bush3.png" />
 		<img id="b4" src="assets/bush4.png" />
 		<img id="floor" src="assets/floor.png" />
+		<img id="carlos" src="assets/pugSkybox.jpg" />
 	
 		<a-asset-item id="obj" src="https://greeny3ny.github.io/models/pug/model.obj"></a-asset-item>
 		<a-asset-item id="mat" src="https://greeny3ny.github.io/models/pug/materials.mtl"></a-asset-item>
 		
   	</a-assets>
 
+	<a-cone id='hat' n-skeleton-parent="part:head" radius-bottom="0.2" radius-top="0" height="0.5" src="#carlos" position="0 0.4 0" sync sync-n-skeleton-parent> </a-cone>
 	
 	<a-entity id='lb_top5' scale="5 5 5" position='40 50 15' n-text='text: test;'>
 		<a-animation attribute="rotation" dur="50000" easing="linear" to="0 360 0" repeat="indefinite"></a-animation>
@@ -323,31 +325,41 @@ readFBTimes();
 	<a-entity id='leaderboard' scale="1 1 1" position='0 12 -9.45' n-text='text: test;'></a-entity>
 	
 	<!--<a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6"></a-sky>-->
-		<a-sky radius="550" src="assets/pugSkybox.jpg" segments-width="10" segments-height="6"></a-sky>
+		<a-sky radius="550" src="#carlos" segments-width="10" segments-height="6"></a-sky>
 		
 	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
-	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="56.5, 2, 45" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+	
+	<!--- 56.5 2 45 for size 16 -->
+	<!-- size 15 configuration -->
+	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="53.5, 2, 42" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+	
 	
 	<a-box position="0 12 -10" scale="10 24 1" color=black></a-box>
 	<a-box position="10 3 -10" scale="10 6 1" color="black"></a-box>
 	
-	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
+	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#carlos; repeat:75 75;" position="0 0 0" scale="500 0.1 500"></a-entity>
 	<a-entity id="ramp" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:1.5 1.5;" position="9 1 5" rotation="-30 0 0" scale="2 1 10"></a-entity>
 	<a-entity id="ramp_top" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:0.5 0.5;" position="9 3.41 10.2" rotation="0 0 0" scale="2 1 2.3"></a-entity>
-	<a-entity id="side1" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b2; repeat:20 1;" position="58 2 27" scale="0.1 4 60"></a-entity>
+	
+	<!-- 58 2 27 for size 16-->
+	<!-- size 15 configuration -->
+	<a-entity id="side1" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:20 1;" position="55 2 27" scale="0.1 4 60"></a-entity>
+	
+	<!-- inc/dec x by 3 for size inc/dec by 1-->
+	
 	<a-entity id="side2" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b3; repeat:10 1;" position="34 2 -3" scale="48 4 0.1"></a-entity>
 	<a-box id="roof" n-mesh-collider="type:environment" position="34 4 21" opacity=0.25 scale="48 0.1 48"></a-box>
 	
 	<a-entity id="start" position="0 2 0"></a-entity>
 	
-	<a-entity id="end_portal" position="54 0.5 55" rotation="0 180 0" n-portal="targetEntity:#start" n-text="text:Back To Start; fontSize:5"></a-entity>
-	<a-entity id='time' scale="1 1 1" position='54 3 55' rotation='0 180 0' n-text='text: timer;'></a-entity>
+	<a-entity id="end_portal" position="51 0.5 55" rotation="0 180 0" n-portal="targetEntity:#start" n-text="text:Back To Start; fontSize:5"></a-entity>
+	<a-entity id='time' scale="1 1 1" position='51 3 55' rotation='0 180 0' n-text='text: timer;'></a-entity>
 	
-	<a-entity geometry="primitive:box" n-mesh-collider="type:environment" position="54 2 57" scale="8 4 1" material="src:#b3; repeat:3 1;"></a-entity>
+	<a-entity geometry="primitive:box" n-mesh-collider="type:environment" position="51 2 57" scale="8 4 1" material="src:#b3; repeat:3 1;"></a-entity>
 	
-	<a-entity id="side3" geometry="primitive:box"  material="src:#b4; repeat:4 1;" n-mesh-collider="type:environment" position="50 2 51" scale="0.1 4 12"></a-entity> <!--  -->
+	<a-entity id="side3" geometry="primitive:box"  material="src:#b4; repeat:4 1;" n-mesh-collider="type:environment" position="47 2 49.5" scale="0.1 4 15"></a-entity> <!--  -->
 	
-	<a-box id="roof_end" n-mesh-collider="type:environment" position="54 4 51" opacity=0.25 scale="8 0.1 12"></a-box>
+	<a-box id="roof_end" n-mesh-collider="type:environment" position="51 4 51" opacity=0.25 scale="8 0.1 12"></a-box>
 	
 	<a-box id="wallCollideLeft"  material="visible:false;"></a-box>
 	<a-box id="wallCollideRight"  material="visible:false;"></a-box>
@@ -355,10 +367,10 @@ readFBTimes();
 	<a-box id="wallCollideBottom" material="visible:false;"></a-box>
 	<a-box id="wallCollideFront" material="visible:false;"></a-box>
 	
-	<a-entity position="0 5 1" rotation="0 0 0" scale="5 5 5"
+	<a-entity position="0 5 0" rotation="0 0 0" scale="5 5 5"
 		n-layout-browser="url:https://video-jukebox.firebaseapp.com/index.html?disableDownvoting=true&disableVoting=true&hidePlaylist=true&initialPlaylist=PLFWnJaC5k6lYvzfs-3R9k8qa69XwlWC-g; isEnclosure:true">
 	</a-entity>
-	
+
 	<a-entity id='message' scale="1 1 1" position='0 5 15' rotation="0 180 0" n-text='fontSize:4; width:100; 
 	text: Note: Maze Generation Code is NOT mine
 	All credit to maze code goes to dstromberg2 on github
@@ -423,7 +435,7 @@ var instanceRef;
 var scene = document.querySelector('a-scene');
 var fbGameRef = new Firebase("https://vrmaze-b0810.firebaseio.com");
 //---
-const SIZE = 16;
+const SIZE = 15;
 const SCALE = 3;
 const HEIGHT = 4;
 const X_SHIFT = 10;
@@ -476,7 +488,7 @@ wipeObjects();
 		skeleton.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
 		skeleton.setAttribute('scale', '9 9 9');
 		skeleton.setAttribute('n-mesh-collider','type:environment');
-		skeleton.setAttribute('position', '56.5 1 55');
+		skeleton.setAttribute('position', '53.5 1 55');
 		skeleton.setAttribute('rotation', '0 50 0');
 		scene.appendChild(skeleton);
 		objects.push(skeleton);
@@ -485,7 +497,7 @@ wipeObjects();
 		skeleton2.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
 		skeleton2.setAttribute('scale', '9 9 9');
 		skeleton2.setAttribute('n-mesh-collider','type:environment');
-		skeleton2.setAttribute('position', '51.5 1 55');
+		skeleton2.setAttribute('position', '48.5 1 55');
 		skeleton2.setAttribute('rotation', '0 0 0');
 		scene.appendChild(skeleton2);
 		objects.push(skeleton2);
@@ -502,13 +514,20 @@ for (var i = 0; i<SIZE;i++){
 			
 		//create wall of second orientation
 		
-		
 		var skeleton = document.createElement('a-box');
+		var hat  = document.createElement('a-cone');
+		hat.setAttribute('src','#carlos');
+		hat.setAttribute('radius-bottom','0.2');
+		hat.setAttribute('radius-top','0');
+		hat.setAttribute('height','0.5');
+		hat.setAttribute('scale','1.1 1 1.1');
+		
 		//3,3,3 for skeleton
 		//9,9,9 for pug
 		skeleton.setAttribute('scale', '9 9 9');
 		//skeleton.setAttribute('n-mesh-collider','type:environment');
 		skeleton.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
+		
 		//create box only if needed
 		if (maze[i][j][0] === 0 ){
 		
@@ -541,30 +560,54 @@ for (var i = 0; i<SIZE;i++){
 		//only spawn a skeleton 1/3 times
 		if (skeletonRandom === 1){
 		//deadend 1
+		
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][2]===0){
 				skeleton.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1 '+ SCALE*(j-0.25));
 				skeleton.setAttribute('rotation', '0 30 0');
+				hat.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1.85 '+ SCALE*(j-0.15));
+				
+				scene.appendChild(hat);
+				objects.push(hat);
+				
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
 		
+		//THIS IS FINE!
 			if (maze[i][j][1]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
 				skeleton.setAttribute('position', X_SHIFT+SCALE*i+2.25 + ' 1 '+ SCALE*(j-0.5));
 				skeleton.setAttribute('rotation', '0 120 0');
+				hat.setAttribute('position', X_SHIFT+SCALE*i+2.5 + ' 1.85 '+ SCALE*(j-0.5));
+				
+				scene.appendChild(hat);
+				objects.push(hat);
+				
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
 		
+		//THIS IS FINE!!
 			if (maze[i][j][0]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
 				skeleton.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1 '+ SCALE*(j-0.75));
 				skeleton.setAttribute('rotation', '0 210 0');
+				hat.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1.85 '+ SCALE*(j-0.85));
+				
+				scene.appendChild(hat);
+				objects.push(hat);
+				
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
 		
+			//THIS IS FINE!
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][3]===0){
 				skeleton.setAttribute('position', X_SHIFT+SCALE*i+0.75 + ' 1 '+ SCALE*(j-0.5));
 				skeleton.setAttribute('rotation', '0 -60 0');
+				hat.setAttribute('position', X_SHIFT+SCALE*i+0.5 + ' 1.85 '+ SCALE*(j-0.5));
+				
+				scene.appendChild(hat);
+				objects.push(hat);
+				
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
 			}
@@ -631,18 +674,6 @@ function newMaze1(x, y) {
         }
     }
     return cells;
-}
-
-function mazeChange(){
-	console.log("tick " + mazeChangeCount);
-	if (mazeChangeCount < 0){
-		mazeChangeCount = MAZE_TIME_CHANGE;
-		console.log("a mod has clicked");
-		maze = newMaze1(SIZE,SIZE);
-		writeFirebase();
-	
-	}
-
 }
 
 newMaze.addEventListener('cursordown', function(){
