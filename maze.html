@@ -323,8 +323,7 @@ readFBTimes();
 	<a-entity id='leaderboard' scale="1 1 1" position='0 12 -9.45' n-text='text: test;'></a-entity>
 	
 	<!--<a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6"></a-sky>-->
-	
-	<a-sky radius="550" src="assets/pugSkybox.jpg" segments-width="10" segments-height="6"></a-sky>
+		<a-sky radius="550" src="assets/pugSkybox.jpg" segments-width="10" segments-height="6"></a-sky>
 		
 	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="56.5, 2, 45" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
@@ -356,8 +355,8 @@ readFBTimes();
 	<a-box id="wallCollideBottom" material="visible:false;"></a-box>
 	<a-box id="wallCollideFront" material="visible:false;"></a-box>
 	
-	<a-entity position="0 5 3" rotation="0 0 0" scale="5 5 5"
-		n-layout-browser="url:https://video-jukebox.firebaseapp.com; isEnclosure:true">
+	<a-entity position="0 5 1" rotation="0 0 0" scale="5 5 5"
+		n-layout-browser="url:https://video-jukebox.firebaseapp.com/index.html?disableDownvoting=true&disableVoting=true&hidePlaylist=true&initialPlaylist=PLFWnJaC5k6lYvzfs-3R9k8qa69XwlWC-g; isEnclosure:true">
 	</a-entity>
 	
 	<a-entity id='message' scale="1 1 1" position='0 5 15' rotation="0 180 0" n-text='fontSize:4; width:100; 
@@ -369,6 +368,7 @@ readFBTimes();
 	I simply used his algorithm that created the maze and adapted it for AltspaceVR
 	
 	Pug Models made by Lia
+	Happy Birthday Lia ! :)
 	
 	Code by Craig
 	;'></a-entity>
@@ -382,11 +382,11 @@ readFBTimes();
 	<a-entity id='m5' scale="1 1 1" position='8 3 -9' n-text='fontSize:4; width:100;
 	text: 
 	TOP 5 LAST WEEK :
-				Special Andrew, 18.7
-				gemini1974, 20.9
-				Sloan, 34
-				Njord, 39.1
-				Winrar 48.7
+				Special Andrew, 18.1
+				Niek, 19.3
+				Craig, 27.1
+				Ramiro, 71.7
+				gintoma, 122.5
 	; '></a-entity>
 	
 	<!-- 
@@ -469,7 +469,6 @@ function writeFirebase(){
 //main();
 //writeFirebase();
 readFirebase();
-setInterval(timerTick,1000);
 function main(){
 wipeObjects();
 	
@@ -634,11 +633,6 @@ function newMaze1(x, y) {
     return cells;
 }
 
-function timerTick(){
-	mazeChangeCount --;
-	document.querySelector('#mazeChangeTxt').setAttribute('n-text','fontSize:4; text: ' + mazeChangeCount +';');
-}
-
 function mazeChange(){
 	console.log("tick " + mazeChangeCount);
 	if (mazeChangeCount < 0){
@@ -653,26 +647,16 @@ function mazeChange(){
 
 newMaze.addEventListener('cursordown', function(){
 	console.log("clickl");
-	//setInterval(mazeChange, 1000);
-	
-	//change userID to NEW system!!!
-	//IF CRAIG PUSHES THE BUTTON, START THE TICKY TIMER
-	//LOCAL TIMER WILL ONLY COUNT FOR CRAIG, BUT WILL UPDATE MAZE FOR EVERYONE
-	//NEED TO CHANGE THIS!!!
-	if (isMod){
-		setInterval(mazeChange, 1000);
-	}
-	/**
 	//Craig, Lia and mods only
 	//userID's redundant due to sdk change
-	if (userID == 647102026148217336 || userID == 403147243432968910 || isMod){
+	if (isMod){
 		console.log("a mod has clicked");
-		maze = newMaze1(size,size);
+		maze = newMaze1(SIZE,SIZE);
 		writeFirebase();
 	}
-	maze = newMaze1(size,size);
-	writeFirebase();
-	*/
+	//maze = newMaze1(SIZE,SIZE);
+	//writeFirebase();
+	
 });
 		});
    });
