@@ -317,6 +317,7 @@ readFBTimes();
   	</a-assets>
 
 	<a-cone id='hat' n-skeleton-parent="part:head" radius-bottom="0.2" radius-top="0" height="0.5" src="#carlos" position="0 0.4 0" sync sync-transform> </a-cone>
+	<a-entity instantiator="on:clientJoined; mixin:#hat></a-entity>
 	
 	<a-entity id='lb_top5' scale="5 5 5" position='40 50 15' n-text='text: test;'>
 		<a-animation attribute="rotation" dur="50000" easing="linear" to="0 360 0" repeat="indefinite"></a-animation>
