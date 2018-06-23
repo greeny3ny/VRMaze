@@ -316,9 +316,6 @@ readFBTimes();
 		
   	</a-assets>
 
-	<a-cone id='hat' n-skeleton-parent="part:head" radius-bottom="0.2" radius-top="0" height="0.5" src="#carlos" position="0 0.4 0" sync="ownOn:clientjoined" sync-transform> </a-cone>
-	
-	
 	<a-entity id='lb_top5' scale="5 5 5" position='40 50 15' n-text='text: test;'>
 		<a-animation attribute="rotation" dur="50000" easing="linear" to="0 360 0" repeat="indefinite"></a-animation>
 	</a-entity>
@@ -369,7 +366,7 @@ readFBTimes();
 	<a-box id="wallCollideFront" material="visible:false;"></a-box>
 	
 	<a-entity position="0 5 0" rotation="0 0 0" scale="5 5 5"
-		n-layout-browser="url:https://video-jukebox.firebaseapp.com/index.html?disableDownvoting=true&disableVoting=true&hidePlaylist=true&initialPlaylist=PLFWnJaC5k6lYvzfs-3R9k8qa69XwlWC-g; isEnclosure:true">
+		n-layout-browser="url:https://video-jukebox.firebaseapp.com/index.html?disableDownvoting=true&disableVoting=true&hidePlaylist=true&initialPlaylist=PLFWnJaC5k6lahKthuUlgKre54H7ovu8A2; isEnclosure:true">
 	</a-entity>
 
 	<a-entity id='message' scale="1 1 1" position='0 5 15' rotation="0 180 0" n-text='fontSize:4; width:100; 
@@ -381,7 +378,6 @@ readFBTimes();
 	I simply used his algorithm that created the maze and adapted it for AltspaceVR
 	
 	Pug Models made by Lia
-	Happy Birthday Lia ! :)
 	
 	Code by Craig
 	;'></a-entity>
@@ -395,11 +391,11 @@ readFBTimes();
 	<a-entity id='m5' scale="1 1 1" position='8 3 -9' n-text='fontSize:4; width:100;
 	text: 
 	TOP 5 LAST WEEK :
-				Special Andrew, 18.1
-				Niek, 19.3
-				Craig, 27.1
-				Ramiro, 71.7
-				gintoma, 122.5
+				Special Andrew, 21.1
+				Winrar, 27.8
+				Craig, 33.8
+				Lia, 33.8
+				Jonjon, 35.5
 	; '></a-entity>
 	
 	<!-- 
@@ -516,12 +512,6 @@ for (var i = 0; i<SIZE;i++){
 		//create wall of second orientation
 		
 		var skeleton = document.createElement('a-box');
-		var hat  = document.createElement('a-cone');
-		hat.setAttribute('src','#carlos');
-		hat.setAttribute('radius-bottom','0.2');
-		hat.setAttribute('radius-top','0');
-		hat.setAttribute('height','0.5');
-		hat.setAttribute('scale','1.1 1 1.1');
 		
 		//3,3,3 for skeleton
 		//9,9,9 for pug
@@ -565,10 +555,10 @@ for (var i = 0; i<SIZE;i++){
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][2]===0){
 				skeleton.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1 '+ SCALE*(j-0.25));
 				skeleton.setAttribute('rotation', '0 30 0');
-				hat.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1.85 '+ SCALE*(j-0.15));
+				//hat.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1.85 '+ SCALE*(j-0.15));
 				
-				scene.appendChild(hat);
-				objects.push(hat);
+				//scene.appendChild(hat);
+				/objects.push(hat);
 				
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
@@ -578,10 +568,10 @@ for (var i = 0; i<SIZE;i++){
 			if (maze[i][j][1]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
 				skeleton.setAttribute('position', X_SHIFT+SCALE*i+2.25 + ' 1 '+ SCALE*(j-0.5));
 				skeleton.setAttribute('rotation', '0 120 0');
-				hat.setAttribute('position', X_SHIFT+SCALE*i+2.5 + ' 1.85 '+ SCALE*(j-0.5));
+				//hat.setAttribute('position', X_SHIFT+SCALE*i+2.5 + ' 1.85 '+ SCALE*(j-0.5));
 				
-				scene.appendChild(hat);
-				objects.push(hat);
+				//scene.appendChild(hat);
+				//objects.push(hat);
 				
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
@@ -591,10 +581,10 @@ for (var i = 0; i<SIZE;i++){
 			if (maze[i][j][0]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
 				skeleton.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1 '+ SCALE*(j-0.75));
 				skeleton.setAttribute('rotation', '0 210 0');
-				hat.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1.85 '+ SCALE*(j-0.85));
+				//hat.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1.85 '+ SCALE*(j-0.85));
 				
-				scene.appendChild(hat);
-				objects.push(hat);
+				//scene.appendChild(hat);
+				//objects.push(hat);
 				
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
@@ -604,10 +594,10 @@ for (var i = 0; i<SIZE;i++){
 			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][3]===0){
 				skeleton.setAttribute('position', X_SHIFT+SCALE*i+0.75 + ' 1 '+ SCALE*(j-0.5));
 				skeleton.setAttribute('rotation', '0 -60 0');
-				hat.setAttribute('position', X_SHIFT+SCALE*i+0.5 + ' 1.85 '+ SCALE*(j-0.5));
+				//hat.setAttribute('position', X_SHIFT+SCALE*i+0.5 + ' 1.85 '+ SCALE*(j-0.5));
 				
-				scene.appendChild(hat);
-				objects.push(hat);
+				//scene.appendChild(hat);
+				//objects.push(hat);
 				
 				scene.appendChild(skeleton);
 				objects.push(skeleton);
