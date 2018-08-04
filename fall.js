@@ -63,6 +63,7 @@ AFRAME.registerComponent('leaderboard1',
 			started = true;
 		}	
 
+		/** THIS IS BORKED
 		if (self.data.box_id === 4){
 		
 			console.log("cheat detected");
@@ -109,6 +110,7 @@ AFRAME.registerComponent('leaderboard1',
 			document.querySelector('#wallCollideBottom').setAttribute('n-skeleton-parent', 'part: head');
 			document.querySelector('#wallCollideBottom').setAttribute('altspace-cursor-collider', 'enabled: true');
 		}
+		**/
 		
     }// end function handle join
 	
