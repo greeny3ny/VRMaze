@@ -20,281 +20,7 @@
   firebase.initializeApp(config);
 </script>
 
-
-<script>
-var fbGameRef = new Firebase("https://vrmaze-b0810.firebaseio.com");
-var started = false;
-var time=0;
-var finaltime=0;
-var user;
-var times=[];
-var leaderBoard = [];//testing
-//base collision aframe component code
-getUser1();
-AFRAME.registerComponent('base_collision',
-                         {
-  schema:  //does stuff
-  { 
-    jointCubeSize: {
-      type: 'float',
-      default: 0.275
-    },
-	box_id:
-	{
-		type: 'int'
-	}
-  },
-  init: function ()
-  {
-    var self = this;
-    var object = self.el.object3D;
-	
-    object.addBehavior(new altspace.utilities.behaviors.JointCollisionEvents
-                       ({
-      joints: [['Head', 'Center', 0]], jointCubeSize: self.data.jointCubeSize
-    }));
-	
-	//joints enter
-    object.addEventListener('jointcollisionenter', handleJoin);		
-    function handleJoin(event)
-    {
-	
-		console.log("box " + self.data.box_id);
-	    //console.log("start");
-		
-		if (self.data.box_id===2 && started){
-		
-			//upload time to database
-		
-			//if (finaltime >= 15){
-				finaltime = time;
-				times[0] = user;
-				times[1] = finaltime;
-				console.log("final time = " + finaltime);
-				writeFirebase();
-			//} 
-		
-			console.log("end");
-			started = false;
-		}	
-		
-		
-		if (self.data.box_id === 1 && !started){
-			time = 0;
-			console.log("ticky");
-			
-			started = true;
-		}
-		
-		if (self.data.box_id === 4){
-		
-			console.log("cheat detected");
-			
-			//renders box on players hands when in wall to stop them teleporting
-		
-			document.querySelector('#wallCollideLeft').setAttribute('position', '-1 0 0');
-			document.querySelector('#wallCollideLeft').setAttribute('scale', '0.2 2.5 2.5');
-			document.querySelector('#wallCollideLeft').setAttribute('color', 'blue');
-			document.querySelector('#wallCollideLeft').setAttribute('opacity', '0.5');
-			document.querySelector('#wallCollideLeft').setAttribute('n-skeleton-parent', 'part: head');
-			document.querySelector('#wallCollideLeft').setAttribute('altspace-cursor-collider', 'enabled: true');	
-			document.querySelector('#wallCollideLeft').setAttribute('material', 'src:#b2; repeat:1 1;visible:true');
-			
-			document.querySelector('#wallCollideRight').setAttribute('position', '1 0 0');
-			document.querySelector('#wallCollideRight').setAttribute('scale', '0.2 2.5 2.5');
-			document.querySelector('#wallCollideRight').setAttribute('color', 'blue');
-			document.querySelector('#wallCollideRight').setAttribute('opacity', '0.5');
-			document.querySelector('#wallCollideRight').setAttribute('material', 'src:#b2; repeat:1 1;visible:true');
-			document.querySelector('#wallCollideRight').setAttribute('n-skeleton-parent', 'part: head');
-			document.querySelector('#wallCollideRight').setAttribute('altspace-cursor-collider', 'enabled: true');
-			
-			document.querySelector('#wallCollideFront').setAttribute('position', '0 0 -1');
-			document.querySelector('#wallCollideFront').setAttribute('scale', '2.5 2.5 0.2');
-			document.querySelector('#wallCollideFront').setAttribute('color', 'blue');
-			document.querySelector('#wallCollideFront').setAttribute('opacity', '0.5');
-			document.querySelector('#wallCollideFront').setAttribute('material', 'src:#b2; repeat:1.5 1.5;visible:true');
-			document.querySelector('#wallCollideFront').setAttribute('n-skeleton-parent', 'part: head');
-			document.querySelector('#wallCollideFront').setAttribute('altspace-cursor-collider', 'enabled: true');
-			
-			document.querySelector('#wallCollideTop').setAttribute('position', '0 1 0');
-			document.querySelector('#wallCollideTop').setAttribute('scale', '2.5 0.2 2.5');
-			document.querySelector('#wallCollideTop').setAttribute('color', 'blue');
-			document.querySelector('#wallCollideTop').setAttribute('opacity', '0.5');
-			document.querySelector('#wallCollideTop').setAttribute('material', 'src:#b2; repeat:1 1;visible:true');
-			document.querySelector('#wallCollideTop').setAttribute('n-skeleton-parent', 'part: head');
-			document.querySelector('#wallCollideTop').setAttribute('altspace-cursor-collider', 'enabled: true');
-			
-			document.querySelector('#wallCollideBottom').setAttribute('position', '0 -0.75 0');
-			document.querySelector('#wallCollideBottom').setAttribute('scale', '2.5 0.2 2.5');
-			document.querySelector('#wallCollideBottom').setAttribute('color', 'blue');
-			document.querySelector('#wallCollideBottom').setAttribute('opacity', '0.5');
-			document.querySelector('#wallCollideBottom').setAttribute('material', 'src:#b2; repeat:1 1;visible:true');
-			document.querySelector('#wallCollideBottom').setAttribute('n-skeleton-parent', 'part: head');
-			document.querySelector('#wallCollideBottom').setAttribute('altspace-cursor-collider', 'enabled: true');
-		}
-				
-    }// end function handle join
-	
-	//joint collision leave
-    object.addEventListener('jointcollisionleave', handleLeave);
-    function handleLeave(event)
-    {
-		if (self.data.box_id === 4){
-			console.log("bush collision ended")
-			document.querySelector('#wallCollideLeft').setAttribute('scale', '0.1 0.1 0.1');
-			document.querySelector('#wallCollideLeft').setAttribute('color', 'red');
-			document.querySelector('#wallCollideLeft').setAttribute('position', '0 0 0');
-			
-			document.querySelector('#wallCollideRight').setAttribute('scale', '0.1 0.1 0.1');
-			document.querySelector('#wallCollideRight').setAttribute('color', 'red');
-			document.querySelector('#wallCollideRight').setAttribute('position', '0 0 0');
-			
-			document.querySelector('#wallCollideTop').setAttribute('scale', '0.1 0.1 0.1');
-			document.querySelector('#wallCollideTop').setAttribute('color', 'red');
-			document.querySelector('#wallCollideTop').setAttribute('position', '0 0 0');
-			
-			document.querySelector('#wallCollideBottom').setAttribute('scale', '0.1 0.1 0.1');
-			document.querySelector('#wallCollideBottom').setAttribute('color', 'red');
-			document.querySelector('#wallCollideBottom').setAttribute('position', '0 0 0');
-			
-			document.querySelector('#wallCollideFront').setAttribute('scale', '0.1 0.1 0.1');
-			document.querySelector('#wallCollideFront').setAttribute('color', 'red');
-			document.querySelector('#wallCollideFront').setAttribute('position', '0 0 0');
-		}
-    }//end function handle leave
-  }
-}); //end base collision
-function writeFirebase(){
-	console.log("writing to firebase");
-	fbGameRef.child("times").push({times:times});
-	
-	//readFirebase();
-}
-setInterval(tick, 100);
-function tick(){
-	time+=0.1;
-	time = Math.round(time*10)/10;
-	
-	if (started){
-		document.querySelector('#time').setAttribute('n-text','fontSize:4; text: Your time is : ' + time);
-	}
-	else 
-	{
-		document.querySelector('#time').setAttribute('n-text','fontSize:4; text: Your time is : ' + finaltime);
-	}
-	
-}
-function getUser1(){
-	
-	altspace.getUser().then(function(user1){
-		console.log(user1);
-		user = user1.displayName;
-		console.log(user);
-		//sets timeout to deal with latency issues - kinda works
-		//setTimeout(addToSession, 2000); 
-	});
-	
-}
-var test = [];
-var counter = 0;
-var top5_board = "";
-var board = "";
-function readFBTimes(){
-	
-	
-	console.log("reading times...");
-	fbGameRef.child("times").on("child_added", function(snapshot){
-	
-		leaderBoard = snapshot.val();
-		test[counter] = leaderBoard;
-		counter ++;
-		console.log("counter" + counter);
-	});
-	/*
-	//SOMETHING WRONG WITH THIS CODE
-	//BUT NOT IMPORTANT
-	fbGameRef.child("times").on("child_removed", function(snapshot){
-	
-		leaderBoard = snapshot.val();
-		console.log(leaderBoard);
-		console.log("test:"+ leaderBoard.length);
-		
-		if (leaderBoard.times.length != null){
-			for (var i=0; i<leaderBoard.times.length;i++){
-		
-				test[i] = leaderBoard;
-		
-			}
-		}
-		
-	});
-	*/
-	fbGameRef.on("value", function(snap) {
-		console.log("promise over");
-	
-		updateLeaderboard();
-	
-	});
-	
-}
-
-
-function updateLeaderboard(){
-		board="Highscores:";
-		top5_board="Top 5:";
-	
-		//SORT TEST TIMES
-		sortTimes();
-	
-	//only display top 5 to big leaderboard
-	for (var i=0; i<test.length;i++){
-		console.log(test[i].times);
-		board = board + "\n" + (i+1) + ": " + test[i].times[0] + " " + test[i].times[1];
-		
-		if (i < 5){
-			top5_board =  top5_board + "\n" + (i+1) + ": " + test[i].times[0] + " " + test[i].times[1];
-		}
-			
-	}
-	document.querySelector('#lb_top5').setAttribute('n-text','text:' + top5_board);
-	document.querySelector('#leaderboard').setAttribute('n-text','fontSize:4; text:' + board);
-};
-function sortTimes(){
-	var swapped;
-	do {
-	swapped = false;
-	for (var i=0; i<(test.length-1);i++){
-		console.log("sorting");
-		//bubble sort for now - should upgrade to quicksort for efficiency
-		
-		if (test[i].times[1] > test[i+1].times[1]){
-			
-			var temp = test[i];
-			test[i] = test[i+1];
-			test[i+1] = temp;
-			swapped = true;
-		}
-				
-	}//end for
-	} while (swapped);
-	
-	for (var i =0; i<test.length;i++){
-		console.log(test[i].times[1]);
-	}
-	
-	
-}
-readFBTimes();
-</script>
-
-
-
-
-
-
-
-
-
+<script src="js/fall.js"></script>
 
 <!-- set up the scene -->
 <a-scene altspace="fullspace: false" sync-system="author: greeny3ny; app: mazeRace">
@@ -325,11 +51,11 @@ readFBTimes();
 	<!--<a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6"></a-sky>-->
 		<a-sky radius="550" src="#carlos" segments-width="10" segments-height="6"></a-sky>
 		
-	<a-box id="base1_collider" base_collision="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+	<a-box id="base1_collider" leaderboard1="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	
 	<!--- 56.5 2 45 for size 16 -->
 	<!-- size 15 configuration -->
-	<a-box id="base2_collider" base_collision="box_id:2;" n-mesh-collider="type:hologram" color="red" position="53.5, 2, 42" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+	<a-box id="base2_collider" leaderboard1="box_id:2;" n-mesh-collider="type:hologram" color="red" position="53.5, 2, 42" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
 	
 	
 	<a-box position="0 12 -10" scale="10 24 1" color=black></a-box>
@@ -380,6 +106,8 @@ readFBTimes();
 	Pug Models made by Lia
 	
 	Code by Craig
+	
+	Ya cheat, ya get kicked!
 	;'></a-entity>
 	
 	<a-entity id='MB' scale="1 1 1" position='-10 1 -10' n-text='fontSize:4; width:100;
@@ -390,17 +118,12 @@ readFBTimes();
 	
 	<a-entity id='m5' scale="1 1 1" position='8 3 -9' n-text='fontSize:4; width:100;
 	text: 
-	TOP 10 LAST WEEK :
-				Special Andrew, 12
-				Niek, 16.1
-				Gregeriah, 16.2
-				Craig, 22.9
-				Michiyo, 23.5
-				Linda, 24.5
-				Dave vtid, 26
-				Andre, 33.7
-				Tara, 38.9
-				Connor, 45.2
+	TOP 5 LAST MAZE :
+				Henry, 17.2
+				DJ Vortex, 19.3
+				Dave vtid, 24.6
+				Norman, 28.2
+				Kylie, 28.4
 	; '></a-entity>
 	
 	<!-- 
@@ -531,7 +254,7 @@ for (var i = 0; i<SIZE;i++){
 			box1.setAttribute('scale', '0.1 ' + HEIGHT + ' ' + SCALE);
 			box1.setAttribute('src','#b'+bushRandom1);
 			box1.setAttribute('n-mesh-collider','type:environment');
-			box1.setAttribute('base_collision','box_id:4');
+			box1.setAttribute('leaderboard1','box_id:4');
 		
 			box1.setAttribute('position', X_SHIFT + SCALE*i + ' ' +HEIGHT/2+' ' + SCALE*(j-0.5));
 			scene.appendChild(box1);
@@ -544,7 +267,7 @@ for (var i = 0; i<SIZE;i++){
 			box2.setAttribute('src','#b'+bushRandom2);
 			box2.setAttribute('n-mesh-collider','type:environment');
 			
-			box2.setAttribute('base_collision','box_id:4');
+			box2.setAttribute('leaderboard1','box_id:4');
 		
 			box2.setAttribute('position', X_SHIFT + SCALE*(i+0.5) + ' '+HEIGHT/2+' ' + SCALE*j);
 			scene.appendChild(box2);
