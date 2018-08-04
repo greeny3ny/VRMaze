@@ -109,13 +109,35 @@ AFRAME.registerComponent('leaderboard1',
 			document.querySelector('#wallCollideBottom').setAttribute('n-skeleton-parent', 'part: head');
 			document.querySelector('#wallCollideBottom').setAttribute('altspace-cursor-collider', 'enabled: true');
 		}
-		
+				
     }// end function handle join
 	
 	//joint collision leave
     object.addEventListener('jointcollisionleave', handleLeave);
     function handleLeave(event)
     {
+		if (self.data.box_id === 4){
+			console.log("bush collision ended")
+			document.querySelector('#wallCollideLeft').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideLeft').setAttribute('color', 'red');
+			document.querySelector('#wallCollideLeft').setAttribute('position', '0 0 0');
+			
+			document.querySelector('#wallCollideRight').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideRight').setAttribute('color', 'red');
+			document.querySelector('#wallCollideRight').setAttribute('position', '0 0 0');
+			
+			document.querySelector('#wallCollideTop').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideTop').setAttribute('color', 'red');
+			document.querySelector('#wallCollideTop').setAttribute('position', '0 0 0');
+			
+			document.querySelector('#wallCollideBottom').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideBottom').setAttribute('color', 'red');
+			document.querySelector('#wallCollideBottom').setAttribute('position', '0 0 0');
+			
+			document.querySelector('#wallCollideFront').setAttribute('scale', '0.1 0.1 0.1');
+			document.querySelector('#wallCollideFront').setAttribute('color', 'red');
+			document.querySelector('#wallCollideFront').setAttribute('position', '0 0 0');
+		}
     }//end function handle leave
   }
 }); //end base collision
