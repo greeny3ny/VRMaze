@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html><body>
+<script src="https://aframe.io/releases/0.3.0/aframe.min.js"></script>
+<script src="../../dist/altspace.js"></script>
+<script src="https://sdk.altvr.com/libs/altspace.js/2.4.0/altspace.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/3.0.0/nunjucks.min.js"></script>
+<script src="https://rawgit.com/ngokevin/kframe/a1df8fc01514e509ba6d39c964254a1f1043b12b/dist/kframe.min.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCqHluXEqdILFNl22-DFOVsMBHNt2pZ5H4",
+    authDomain: "vrmaze-b0810.firebaseapp.com",
+    databaseURL: "https://vrmaze-b0810.firebaseio.com",
+    projectId: "vrmaze-b0810",
+    storageBucket: "vrmaze-b0810.appspot.com",
+    messagingSenderId: "82215601878"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<script src="js/fall_spooky.js"></script>
+
+<!-- set up the scene -->
+<a-scene altspace="fullspace: false" sync-system="author: greeny3ny; app: mazeRace">
+ 
+    <!-- add a view camera (2d only) -->
+    <!--<a-text value="Hello, World!"></a-text>-->
+
+    <a-assets>
+		<img id="test" src="assets/test.png" />
+		<img id="b1" src="assets/spooky/bush1.png" />
+		<img id="b2" src="assets/spooky/bush2.png" />
+		<img id="b3" src="assets/spooky/bush3.png" />
+		<img id="b4" src="assets/spooky/bush4.png" />
+		<img id="floor" src="assets/spooky/floor.png" />
+		<img id="carlos" src="assets/spooky/falk.jpg" />
+	
+		<a-asset-item id="obj" src="https://greeny3ny.github.io/models/skeleton/model.obj"></a-asset-item>
+		<a-asset-item id="mat" src="https://greeny3ny.github.io/models/skeleton/materials.mtl"></a-asset-item>
+
+		
+  	</a-assets>
+
+	<a-entity id='lb_top5' scale="5 5 5" position='40 50 15' n-text='text: test;'>
+		<a-animation attribute="rotation" dur="50000" easing="linear" to="0 360 0" repeat="indefinite"></a-animation>
+	</a-entity>
+
+	<a-entity id='leaderboard' scale="1 1 1" position='0 12 -9.45' n-text='text: test;'></a-entity>
+	
+	<!--<a-sky radius="550" src="assets/falk.jpg" segments-width="10" segments-height="6"></a-sky>-->
+		<a-sky radius="550" src="#carlos" segments-width="10" segments-height="6"></a-sky>
+		
+	<a-box id="base1_collider" leaderboard1="box_id:1;" n-mesh-collider="type:hologram" color="white" position="10, 2, -1.5" rotation="0 0 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+	
+	<!--- 56.5 2 45 for size 16 -->
+	<!-- size 15 configuration -->
+	<a-box id="base2_collider" leaderboard1="box_id:2;" n-mesh-collider="type:hologram" color="red" position="53.5, 2, 42" rotation="0 90 0" scale="1 4 3" opacity="0.5" altspace-cursor-collider="enabled: false"></a-box> <!-- base1 collider -->	
+	
+	
+	<a-box position="0 12 -10" scale="10 24 1" color=black></a-box>
+	<a-box position="10 3 -10" scale="10 6 1" color="black"></a-box>
+	
+	<a-entity id="floor" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#floor; repeat:50 50;" position="0 0 0" scale="500 0.1 500"></a-entity>
+	<a-entity id="ramp" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:1.5 1.5;" position="9 1 5" rotation="-30 0 0" scale="2 1 10"></a-entity>
+	<a-entity id="ramp_top" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:0.5 0.5;" position="9 3.41 10.2" rotation="0 0 0" scale="2 1 2.3"></a-entity>
+	
+	<!-- 58 2 27 for size 16-->
+	<!-- size 15 configuration -->
+	<a-entity id="side1" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b1; repeat:20 1;" position="55 2 27" scale="0.1 4 60"></a-entity>
+	
+	<!-- inc/dec x by 3 for size inc/dec by 1-->
+	
+	<a-entity id="side2" geometry="primitive:box" n-mesh-collider="type:environment" material="src:#b3; repeat:10 1;" position="34 2 -3" scale="48 4 0.1"></a-entity>
+	<a-box id="roof" n-mesh-collider="type:environment" position="34 4 21" opacity=0.25 scale="48 0.1 48"></a-box>
+	
+	<a-entity id="start" position="0 2 0"></a-entity>
+	
+	<a-entity id="end_portal" position="51 0.5 55" rotation="0 180 0" n-portal="targetEntity:#start" n-text="text:Back To Start; fontSize:5"></a-entity>
+	<a-entity id='time' scale="1 1 1" position='51 3 55' rotation='0 180 0' n-text='text: timer;'></a-entity>
+	
+	<a-entity geometry="primitive:box" n-mesh-collider="type:environment" position="51 2 57" scale="8 4 1" material="src:#b3; repeat:3 1;"></a-entity>
+	
+	<a-entity id="side3" geometry="primitive:box"  material="src:#b4; repeat:4 1;" n-mesh-collider="type:environment" position="47 2 49.5" scale="0.1 4 15"></a-entity> <!--  -->
+	
+	<a-box id="roof_end" n-mesh-collider="type:environment" position="51 4 51" opacity=0.25 scale="8 0.1 12"></a-box>
+	
+	<a-box id="wallCollideLeft"  material="visible:false;"></a-box>
+	<a-box id="wallCollideRight"  material="visible:false;"></a-box>
+	<a-box id="wallCollideTop"  material="visible:false;"></a-box>
+	<a-box id="wallCollideBottom" material="visible:false;"></a-box>
+	<a-box id="wallCollideFront" material="visible:false;"></a-box>
+	
+	<a-entity position="0 10 0" rotation="0 0 0" scale="5 5 5"
+		n-layout-browser="url:https://video-jukebox.firebaseapp.com/index.html?disableDownvoting=true&disableVoting=true&hidePlaylist=true&initialPlaylist=PLFWnJaC5k6lahKthuUlgKre54H7ovu8A2; isEnclosure:true">
+	</a-entity>
+
+	<a-entity id='message' scale="1 1 1" position='0 5 15' rotation="0 180 0" n-text='fontSize:4; width:100; 
+	text: Note: Maze Generation Code is NOT mine
+	All credit to maze code goes to dstromberg2 on github
+	
+	https://github.com/dstromberg2/maze-generator
+	
+	I simply used his algorithm that created the maze and adapted it for AltspaceVR
+	
+	Pug Models made by Lia
+	
+	Code by Craig
+	
+	Ya cheat, ya get kicked!
+	;'></a-entity>
+	
+	<a-entity id='MB' scale="1 1 1" position='-10 1 -10' n-text='fontSize:4; width:100;
+	text: 
+	Maze Change Timer :
+	Lia , Craig and Mods ONLY
+	; '></a-entity>
+	
+	<a-entity id='m5' scale="1 1 1" position='8 3 -9' n-text='fontSize:4; width:100;
+	text: 
+	BEST MAZE RACER EVER :
+				Carrie James, 20.6
+	; '></a-entity>
+	
+	<!-- 
+	WRITE AN ALGORITHM THAT TAKES AVERAGE TIME OF ALL PERSONS RUN FROM LAST WEEK? 
+	WILL TAKE TIME ???!!!!!
+	-->
+	
+	<a-entity id='mazeChangeTxt' position='-7.5 1.25 -10' rotation='0 0 0' n-text='fontSize:4; text: ---;'></a-entity>
+	
+	
+</a-scene>
+ 
+</body>
+
+<script>
+//this kinda works but messes stuff up 
+
+//THIS CODE IS KINDA REDUNDANT NOW
+//NEED TO REPLACE THREE.JS STUFF POSSIBLY
+//WAIT FOR NEW SDK!
+
+
+var userID;
+var isMod = false;
+altspace.getEnclosure().then(function(enclosure){
+        enclosure.requestFullspace().then(function(){
+		
+		
+	altspace.getUser().then(function(user1){
+		userID = user1.userId;
+		isMod = user1.isModerator;
+		console.log(userID + " " + isMod);
+		//gets userID for button pressing later on
+	});
+var utilities = altspace.utilities;
+var behaviors = altspace.utilities.behaviors;
+var sim = new utilities.Simulation();
+var inCodePen = utilities.codePen.inCodePen;
+var instanceRef;
+var scene = document.querySelector('a-scene');
+var fbGameRef = new Firebase("https://vrmaze-b0810.firebaseio.com");
+//---
+const SIZE = 15;
+const SCALE = 3;
+const HEIGHT = 4;
+const X_SHIFT = 10;
+const MAZE_TIME_CHANGE = 120;
+//---
+var maze = newMaze1(SIZE,SIZE);
+var objects = [];
+
+var mazeChangeCount = MAZE_TIME_CHANGE;
+
+//console.log(maze);
+var box1Geo = new THREE.BoxGeometry(1, 1, 1); 
+var bTex = new THREE.ImageUtils.loadTexture("assets/test.png");
+var bMat = new THREE.MeshBasicMaterial({ 
+    map:bTex, 
+    side:THREE.DoubleSide 
+}); 
+var newMaze = new THREE.Mesh(box1Geo, bMat);
+var endbox = new THREE.Mesh(box1Geo, bMat);
+newMaze.position.set(-10, 0, -10);
+endbox.position.set((SCALE*SIZE), 5, (SCALE*SIZE)-SCALE);
+sim.scene.add(newMaze);
+//sim.scene.add(endbox);
+function wipeObjects(){
+	for (var i=0; i<objects.length; i++){
+		scene.remove(objects[i]);
+	}
+}
+function readFirebase(){
+	console.log("reading firebase...");
+	fbGameRef.child("maze").on("value", function(snapshot){
+		maze = snapshot.val();
+		mazeChangeCount = MAZE_TIME_CHANGE;
+		main();
+	});
+}
+function writeFirebase(){
+	console.log("writing to firebase");
+	fbGameRef.update({maze:maze});
+	
+	//readFirebase();
+}
+//main();
+//writeFirebase();
+readFirebase();
+function main(){
+wipeObjects();
+	
+	var skeleton = document.createElement('a-box');
+		skeleton.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
+		skeleton.setAttribute('scale', '3 3 3');
+		skeleton.setAttribute('n-mesh-collider','type:environment');
+		skeleton.setAttribute('position', '53.5 1 55');
+		skeleton.setAttribute('rotation', '0 50 0');
+		scene.appendChild(skeleton);
+		objects.push(skeleton);
+		
+	var skeleton2 = document.createElement('a-box');
+		skeleton2.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
+		skeleton2.setAttribute('scale', '3 3 3');
+		skeleton2.setAttribute('n-mesh-collider','type:environment');
+		skeleton2.setAttribute('position', '48.5 1 55');
+		skeleton2.setAttribute('rotation', '0 0 0');
+		scene.appendChild(skeleton2);
+		objects.push(skeleton2);
+		
+//create walls
+for (var i = 0; i<SIZE;i++){
+	for (var j = 0; j < SIZE; j ++){
+	
+		maze[0][0][0] = 1; //enter
+		maze[SIZE-1][SIZE-1][1]= 1; //exit
+		//select random textures
+		var bushRandom1 = Math.floor((Math.random() * 4) + 1);
+		var bushRandom2 = Math.floor((Math.random() * 4) + 1);
+			
+		//create wall of second orientation
+		
+		var skeleton = document.createElement('a-box');
+		
+		//3,3,3 for skeleton
+		//9,9,9 for pug
+		skeleton.setAttribute('scale', '3 3 3');
+		//skeleton.setAttribute('n-mesh-collider','type:environment');
+		skeleton.setAttribute('obj-model', 'obj:#obj; mtl:#mat;');
+		
+		//create box only if needed
+		if (maze[i][j][0] === 0 ){
+		
+			var box1 = document.createElement('a-box');
+			box1.setAttribute('scale', '0.1 ' + HEIGHT + ' ' + SCALE);
+			box1.setAttribute('src','#b'+bushRandom1);
+			box1.setAttribute('n-mesh-collider','type:environment');
+			box1.setAttribute('leaderboard1','box_id:4');
+		
+			box1.setAttribute('position', X_SHIFT + SCALE*i + ' ' +HEIGHT/2+' ' + SCALE*(j-0.5));
+			scene.appendChild(box1);
+			objects.push(box1);
+		}
+		if (maze[i][j][1] === 0 ){
+		
+			var box2 = document.createElement('a-box');
+			box2.setAttribute('scale', SCALE+' ' + HEIGHT + ' 0.1');
+			box2.setAttribute('src','#b'+bushRandom2);
+			box2.setAttribute('n-mesh-collider','type:environment');
+			
+			box2.setAttribute('leaderboard1','box_id:4');
+		
+			box2.setAttribute('position', X_SHIFT + SCALE*(i+0.5) + ' '+HEIGHT/2+' ' + SCALE*j);
+			scene.appendChild(box2);
+			objects.push(box2);
+		}
+		
+		var skeletonRandom = Math.floor((Math.random() * 3) + 1);
+		
+		//only spawn a skeleton 1/3 times
+		if (skeletonRandom === 1){
+		//deadend 1
+		
+			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][2]===0){
+				skeleton.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1 '+ SCALE*(j-0.25));
+				skeleton.setAttribute('rotation', '0 30 0');
+				//hat.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1.85 '+ SCALE*(j-0.15));
+				
+				//scene.appendChild(hat);
+				//objects.push(hat);
+				
+				scene.appendChild(skeleton);
+				objects.push(skeleton);
+			}
+		
+		//THIS IS FINE!
+			if (maze[i][j][1]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
+				skeleton.setAttribute('position', X_SHIFT+SCALE*i+2.25 + ' 1 '+ SCALE*(j-0.5));
+				skeleton.setAttribute('rotation', '0 120 0');
+				//hat.setAttribute('position', X_SHIFT+SCALE*i+2.5 + ' 1.85 '+ SCALE*(j-0.5));
+				
+				//scene.appendChild(hat);
+				//objects.push(hat);
+				
+				scene.appendChild(skeleton);
+				objects.push(skeleton);
+			}
+		
+		//THIS IS FINE!!
+			if (maze[i][j][0]===0 && maze[i][j][2]===0  && maze[i][j][3]===0){
+				skeleton.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1 '+ SCALE*(j-0.75));
+				skeleton.setAttribute('rotation', '0 210 0');
+				//hat.setAttribute('position', X_SHIFT+SCALE*i+1.5 + ' 1.85 '+ SCALE*(j-0.85));
+				
+				//scene.appendChild(hat);
+				//objects.push(hat);
+				
+				scene.appendChild(skeleton);
+				objects.push(skeleton);
+			}
+		
+			//THIS IS FINE!
+			if (maze[i][j][0]===0 && maze[i][j][1]===0  && maze[i][j][3]===0){
+				skeleton.setAttribute('position', X_SHIFT+SCALE*i+0.75 + ' 1 '+ SCALE*(j-0.5));
+				skeleton.setAttribute('rotation', '0 -60 0');
+				//hat.setAttribute('position', X_SHIFT+SCALE*i+0.5 + ' 1.85 '+ SCALE*(j-0.5));
+				
+				//scene.appendChild(hat);
+				//objects.push(hat);
+				
+				scene.appendChild(skeleton);
+				objects.push(skeleton);
+			}
+		} //end skeleton random
+		
+		
+		
+	}
+}
+}//end main
+//not my code... 
+function newMaze1(x, y) {
+    // Establish variables and starting grid
+    var totalCells = x*y;
+	var cells = new Array();
+    var unvis = new Array();
+    for (var i = 0; i < y; i++) {
+        cells[i] = new Array();
+        unvis[i] = new Array();
+        for (var j = 0; j < x; j++) {
+            cells[i][j] = [0,0,0,0];
+            unvis[i][j] = true;
+        }
+    }
+    
+    // Set a random position to start from
+    var currentCell = [Math.floor(Math.random()*y), Math.floor(Math.random()*x)];
+    var path = [currentCell];
+    unvis[currentCell[0]][currentCell[1]] = false;
+    var visited = 1;
+    
+    // Loop through all available cell positions
+    while (visited < totalCells) {
+        // Determine neighboring cells
+        var pot = [[currentCell[0]-1, currentCell[1], 0, 2],
+                [currentCell[0], currentCell[1]+1, 1, 3],
+                [currentCell[0]+1, currentCell[1], 2, 0],
+                [currentCell[0], currentCell[1]-1, 3, 1]];
+        var neighbors = new Array();
+        
+        // Determine if each neighboring cell is in game grid, and whether it has already been checked
+        for (var l = 0; l < 4; l++) {
+            if (pot[l][0] > -1 && pot[l][0] < y && pot[l][1] > -1 && pot[l][1] < x && unvis[pot[l][0]][pot[l][1]]) { neighbors.push(pot[l]); }
+        }
+        
+        // If at least one active neighboring cell has been found
+        if (neighbors.length) {
+            // Choose one of the neighbors at random
+            next = neighbors[Math.floor(Math.random()*neighbors.length)];
+            
+            // Remove the wall between the current cell and the chosen neighboring cell
+            cells[currentCell[0]][currentCell[1]][next[2]] = 1;
+            cells[next[0]][next[1]][next[3]] = 1;
+            
+            // Mark the neighbor as visited, and set it as the current cell
+            unvis[next[0]][next[1]] = false;
+            visited++;
+            currentCell = [next[0], next[1]];
+            path.push(currentCell);
+        }
+        // Otherwise go back up a step and keep going
+        else {
+            currentCell = path.pop();
+        }
+    }
+    return cells;
+}
+
+newMaze.addEventListener('cursordown', function(){
+	console.log("clickl");
+	//Craig, Lia and mods only
+	//userID's redundant due to sdk change
+	if (isMod){
+		console.log("a mod has clicked");
+		maze = newMaze1(SIZE,SIZE);
+		writeFirebase();
+	}
+	//maze = newMaze1(SIZE,SIZE);
+	//writeFirebase();
+	
+});
+		});
+   });
+</script>
+</html>
